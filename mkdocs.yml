@@ -1,0 +1,58 @@
+site_name: QCon 2022 - Istio Workshop
+repo_url: https://github.com/tetratelabs/qcon-labs
+edit_uri: edit/main/docs
+theme:
+  name: material
+  custom_dir: overrides
+  logo_light_mode: assets/tetrate-logo-white.png
+  logo_dark_mode: assets/tetrate-logo-black.png
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - navigation.top
+    - navigation.instant
+    - navigation.tracking
+    - content.code.annotate
+extra_css:
+  - css/custom.css
+nav:
+  - index.md
+  - circuit_breakers.md
+  - security.md
+  - vm_workloads.md
+  - Summary: summary.md
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path: artifacts
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+  - tables
+plugins:
+  - search
