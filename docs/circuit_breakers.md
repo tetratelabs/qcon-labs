@@ -1,4 +1,4 @@
-# Circuit breakers lab
+# Circuit breakers
 
 In this lab we'll demonstrate how to configure a circuit breaker and outlier detection using Istio.
 
