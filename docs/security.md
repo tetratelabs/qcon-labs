@@ -100,7 +100,7 @@ The DENY policy is in effect, and we are only allowing calls to be made from the
 
 ## Allow requests from `web-frontend` to `customers`
 
-When we deployed the `web-frontend`, we also created a service account for the Pod to use. Otherwise, all Pods in the namespace are assigned the default service account. A Pod's identity in Istio is a function of its associated namespace and service account.
+When we deployed the `web-frontend`, we also created a service account for the Pod to use. Otherwise, all Pods in the namespace are assigned the default service account.  Using the service account we give the Pods an identity.
 
 Use that service account to specify where the customer service calls can come from.
 
