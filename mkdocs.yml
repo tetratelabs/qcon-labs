@@ -23,7 +23,12 @@ theme:
 extra_css:
   - css/custom.css
 nav:
-  - index.md
+  - environment.md
+  - install.md
+  - the-app.md
+  - ingress.md
+  - dashboards.md
+  - traffic-shifting.md
   - circuit_breakers.md
   - security.md
   - vm_workloads.md
@@ -56,3 +61,9 @@ markdown_extensions:
   - tables
 plugins:
   - search
+  # https://mkdocs-macros-plugin.readthedocs.io/en/latest/
+  - macros
+extra:
+  istio:
+    version: 1.15.0
+
