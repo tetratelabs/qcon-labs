@@ -9,7 +9,7 @@ In this lab we'll demonstrate how to configure a circuit breaker and outlier det
 We'll also have to modify the installation of Istio to enable collection of additional metrics:
 
 ```yaml linenums="1" title="istio-metrics.yaml"
---8<-- "istio-metrics.yaml"
+--8<-- "circuit-breakers/istio-metrics.yaml"
 ```
 
 The above will enable collection of metrics for all prefixes in the list and for all workloads in the mesh. Note that this is not recommended for production environments as the number of metrics collected will be very large. Typically, we'd constrain the metrics collection of extra metrics to a specific workload. For example, we could have enabled those metrics on the Fortio deployment we'll use to generate the load, so the metrics would only be collected for that workload.
@@ -23,7 +23,7 @@ We'll deploy the `web-frontend` and `customers-v1` workloads with corresponding 
 ??? note "Click for cb-lab.yaml"
 
     ```yaml linenums="1" title="cb-lab.yaml"
-    --8<-- "cb-lab.yaml"
+    --8<-- "circuit-breakers/cb-lab.yaml"
     ```
 Save the above file to `cb-lab.yaml` and deploy the resources using:
 
@@ -40,7 +40,7 @@ We'll use Fortio to generate load on the `web-frontend` service - let's deploy F
 ??? note "Click for fortio.yaml"
 
     ```yaml linenums="1" title="fortio.yaml"
-    --8<-- "fortio.yaml"
+    --8<-- "circuit-breakers/fortio.yaml"
     ```
 Save the above file to `fortio.yaml` and deploy it using `kubectl apply -f fortio.yaml`
 
@@ -240,7 +240,7 @@ To see the outlier detection in action we need a service that is failing. We'll 
 ??? note "Click for web-frontend-failing.yaml"
 
     ```yaml linenums="1" title="web-frontend-failing.yaml"
-    --8<-- "web-frontend-failing.yaml"
+    --8<-- "circuit-breakers/web-frontend-failing.yaml"
     ```
 
 Save the above YAML to `web-frontend-failing.yaml` and apply it to the cluster with `kubectl apply -f web-frontend-failing.yaml`.
