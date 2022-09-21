@@ -9,7 +9,7 @@ Let's start by deploying the Gateway:
 ??? note "Click for gateway-all.yaml"
 
     ```yaml linenums="1" title="gateway-all.yaml"
-    --8<-- "gateway-all.yaml"
+    --8<-- "security/gateway-all.yaml"
     ```
 
 Save the above YAML to `gateway-all.yaml` and deploy the Gateway using `kubectl apply -f gateway-all.yaml`.
@@ -18,7 +18,7 @@ Next, we will create the Web frontend deployment, service account, service, and 
 
 ??? note "Click for web-frontend.yaml"
     ```yaml linenums="1" title="web-frontend.yaml"
-    --8<-- "web-frontend.yaml"
+    --8<-- "security/web-frontend.yaml"
     ```
 
 Save the above YAML to `web-frontend.yaml` and create the resource using `kubectl apply -f web-frontend.yaml`.
@@ -27,7 +27,7 @@ Finally, we will deploy the `customers` service.
 
 ??? note "Click for customers.yaml"
     ```yaml linenums="1" title="customers.yaml"
-    --8<-- "customers.yaml"
+    --8<-- "security/customers.yaml"
     ```
 
 Save the above YAML to `customers.yaml` and create the resources with `kubectl apply -f customers.yaml`.
@@ -45,7 +45,7 @@ If we open the `GATEWAY_IP` the web frontend page with the data from the `custom
 Let's start by creating an authorization policy that denies all requests in the default namespace.
 
 ```yaml linenums="1" title="deny-all.yaml"
---8<-- "deny-all.yaml"
+--8<-- "security/deny-all.yaml"
 ```
 
 Save the above YAML to `deny-all.yaml` and create the policy using `kubectl apply -f deny-all.yaml`.
@@ -79,7 +79,7 @@ In both cases, we get back the access denied error. You can type `exit` to exit 
 The first thing we will do is to allow requests being sent from the ingress gateway to the `web-frontend` application using an ALLOW action. In the rules, we are specifying the source namespace (`istio-system`) where the ingress gateway is running and the ingress gateway's service account name in the `principals` field.
 
 ```yaml linenums="1" title="allow-ingress-frontend.yaml"
---8<-- "allow-ingress-frontend.yaml"
+--8<-- "security/allow-ingress-frontend.yaml"
 ```
 
 Save the above YAML to `allow-ingress-frontend.yaml` and create the policy using `kubectl apply -f allow-ingress-frontend.yaml`.
@@ -107,7 +107,7 @@ When we deployed the `web-frontend`, we also created a service account for the P
 We can now use that service account to specify where the customer service calls can come from.
 
 ```yaml linenums="1" title="allow-web-frontend-customers.yaml"
---8<-- "allow-web-frontend-customers.yaml"
+--8<-- "security/allow-web-frontend-customers.yaml"
 ```
 
 Save the above YAML to `allow-web-frontend-customers.yaml` and create the policy using `kubectl apply -f allow-web-frontend-customers.yaml`.

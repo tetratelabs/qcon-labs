@@ -15,7 +15,7 @@ If had a scenario where the VM was running in a different network as the Kuberne
 ??? note "Click for istio-vm-install.yaml"
 
     ```yaml linenums="1" title="istio-vm-install.yaml"
-    --8<-- "istio-vm-install.yaml"
+    --8<-- "vm-workloads/istio-vm-install.yaml"
     ```
 
 Save the above YAML to `istio-vm-install.yaml`.
@@ -284,7 +284,7 @@ From a different terminal window, we can now deploy a Hello world application to
 ??? note "Click for hello-world.yaml"
 
     ```yaml linenums="1" title="hello-world.yaml"
-    --8<-- "hello-world.yaml"
+    --8<-- "vm-workloads/hello-world.yaml"
     ```
 
 Save the above YAML to `hello-world.yaml` and deploy it using `kubectl apply -f hello-world.yaml`.
