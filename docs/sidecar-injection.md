@@ -77,7 +77,7 @@ The container name is `istio-proxy` and the docker image is `istio/proxyv2`.
 
     ```shell
     docker pull docker.io/istio/proxyv2:{{istio.version}}
-    docker inspect istio/proxyv2:{{istio.version}} | grep Entrypoint -A 1
+    docker inspect istio/proxyv2:{{istio.version}} | grep Entrypoint -A 2
     ```
 
     Here is the output:
@@ -85,6 +85,7 @@ The container name is `istio-proxy` and the docker image is `istio/proxyv2`.
     ```json
     "Entrypoint": [
         "/usr/local/bin/pilot-agent"
+    ],
     ```
 
     We learn that the name of the command is `pilot-agent`.
