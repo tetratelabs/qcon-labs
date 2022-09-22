@@ -8,7 +8,7 @@ spec:
   components:
     ingressGateways:
     - name: istio-ingressgateway
-      namespace: istio-ingress
+      namespace: istio-system
       enabled: true
       label:
         # Set a unique label for the gateway. This is required to ensure Gateways
