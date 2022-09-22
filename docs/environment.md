@@ -151,12 +151,12 @@ The lab instructions reference Kubernetes yaml artifacts that you will need to a
 
 You have the option of copying and pasting the yaml snippets directly from the lab instructions as you encounter them.
 
-Another option is to clone the [GitHub repository for this workshop](https://github.com/tetratelabs/istio-0to60){target=_blank} from the Cloud Shell.  You will find all yaml artifacts in the subdirectory named `artifacts`.
+Another option is to clone the [GitHub repository for this workshop](https://github.com/tetratelabs/qcon-labs){target=_blank} from the Cloud Shell.  You will find all yaml artifacts in the subdirectory named `artifacts`.
 
 ```shell
-git clone https://github.com/tetratelabs/istio-0to60.git && \
-  mv istio-0to60/artifacts . && \
-  rm -rf istio-0to60
+git clone https://github.com/tetratelabs/qcon-labs.git && \
+  mv qcon-labs/artifacts . && \
+  rm -rf qcon-labs
 ```
 
 ## Next
