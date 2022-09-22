@@ -1,31 +1,9 @@
-
-:root {
-  /* 
-  the primary fg color is used not only for the header bg color,
-    but also for the fg color of hyperlinks.
-  making it black has the side effect of making links invisible.
-    so for now going back to the default primary color
-  */
+:root>* {
   --md-primary-fg-color: #000717;
   --md-accent-fg-color: #F05623;
 }
 
-[data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #F05623;
-  --md-footer-logo-slate:         block;
-  --md-footer-logo-default:         none;
-}
-
-[data-md-color-scheme="default"] {
-  --md-primary-fg-color: #F05623;
-  --md-footer-logo-slate:         none;
-  --md-footer-logo-default:         block;
-}
-
-#logo_light_mode {
-  display: var(--md-footer-logo-default);
-}
-
-#logo_dark_mode {
-  display: var(--md-footer-logo-slate);
+/* Set the color of the <a> elements for any color scheme */
+[data-md-color-scheme] {
+  --md-typeset-a-color: #F05623;
 }
