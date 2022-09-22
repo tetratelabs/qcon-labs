@@ -59,7 +59,7 @@ Select the GCP project you have been assigned, as follows:
 1. Click the project selector "pulldown" menu from the top banner, which will open a popup dialog
 1. Make sure the _Select from_ organization is set to _tetratelabs.com_
 1. Select the tab named _All_
-1. You will see your GCP project name (istio-0to60..) listed under the organization tetratelabs.com
+1. You will see your GCP project name listed under the organization tetratelabs.com
 1. Select the project from the list
 
 Verify that your project is selected:
