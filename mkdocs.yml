@@ -20,19 +20,22 @@ theme:
     - navigation.instant
     - navigation.tracking
     - content.code.annotate
+    - navigation.expand
 extra_css:
   - css/custom.css
 nav:
-  - environment.md
-  - install.md
-  - sidecar-injection.md
-  - the-app.md
-  - ingress.md
-  - dashboards.md
-  - traffic-shifting.md
-  - circuit_breakers.md
-  - security.md
-  - vm_workloads.md
+  - Morning session:
+    - environment.md
+    - install.md
+    - sidecar-injection.md
+    - the-app.md
+    - ingress.md
+    - dashboards.md
+    - traffic-shifting.md
+  - Afternoon session:
+    - circuit_breakers.md
+    - security.md
+    - vm_workloads.md
   - Summary: summary.md
 markdown_extensions:
   - admonition
