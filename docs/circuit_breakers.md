@@ -114,7 +114,7 @@ Code 503 : 26 (52.0 %)
 
 If we open Zipkin (`istioctl dash zipkin`) and look at the errors, we'll see that the requests are failing because the circuit breaker is tripped (response flags are set to `UO` and status code to 503).
 
-Once you open Zipkin yo ucan click the **Run Query** button and pick one of the failing traces to see the details. You can identify the failing trace by looking at the number of spans - the failing trace will have 1 spans, while the successful ones will have 4 spans.
+Once you open Zipkin you can click the **Run Query** button and pick one of the failing traces to see the details. You can identify the failing trace by looking at the number of spans - the failing trace will have 1 spans, while the successful ones will have 4 spans.
 
 ![Zipkin 503s](zipkin-503.png)
 
@@ -301,7 +301,12 @@ The reason for more HTTP 200 responses is because as soon as the failing hosts w
 We can also look at the metrics from the outlier detection in the same way we did for the circuit breakers:
 
 ```shell
-$ kubectl exec "$FORTIO_POD" -c istio-proxy -- pilot-agent request GET stats | grep web-frontend | grep ejections_total
+kubectl exec "$FORTIO_POD" -c istio-proxy -- pilot-agent request GET stats | grep web-frontend | grep ejections_total
+```
+
+Produces output similar to this:
+
+```console
 cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ejections_total: 4
 ```
 

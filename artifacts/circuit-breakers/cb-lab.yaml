@@ -60,6 +60,8 @@ kind: VirtualService
 metadata:
   name: web-frontend
 spec:
+  gateways:
+    - frontend-gateway
   hosts:
     - '*'
   http:

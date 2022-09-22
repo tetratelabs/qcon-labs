@@ -177,3 +177,26 @@ After you apply the above yaml, go to your browser and make sure all requests la
 Within a minute or so, the Kiali dashboard should also reflect the fact that all traffic is going to the customers v2 service.
 
 Though it no longer receives any traffic, we decide to leave v1 running a while longer before retiring it.
+
+
+## Cleanup
+
+After completing this lab, reset your application to its initial state:
+
+1. Delete the `customers` virtual service:
+
+    ```shell
+    kubectl delete virtualservice customers
+    ```
+
+1. Delete the destination rule for the customers service:
+
+    ```shell
+    kubectl delete destinationrule customers
+    ```
+
+1. Delete the `customer-v2` deployment:
+
+    ```shell
+    kubectl delete deploy customers-v2
+    ```
