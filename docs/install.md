@@ -83,15 +83,66 @@ Make sure that the output of the above command returns a green "checkmark" stati
 
 ## Install Istio
 
-1. Istio can be installed directly with the CLI:
+Take a moment to learn about [Istio installation profiles](https://istio.io/latest/docs/setup/additional-setup/config-profiles/){target=_blank}.
 
-    ```{.shell .language-shell}
-    istioctl install
+Choose your journey:
+
+=== "Simple Recipe"
+
+    This installation recipe uses the `default` profile, which installs both `istiod` and `istio-ingressgateway` components in a single step.
+
+    1. Istio can be installed directly with the CLI:
+
+        ```{.shell .language-shell}
+        istioctl install
+        ```
+
+    1. When prompted, enter `y` to proceed to install Istio.
+
+=== "Separate Gateway Recipe"
+
+    In production settings, it is preferrable to install the Istio gateway component separately, providing the flexibility of upgrading each component independently.
+
+    This full procedure can be found [in the Istio documentation](https://istio.io/latest/docs/setup/additional-setup/gateway/){target=_blank}.
+
+    ### Install Istio by itself
+
+    ```shell
+    istioctl install --set profile=minimal
     ```
 
-1. When prompted, enter `y` to proceed to install Istio.
+    ### Install the ingress gateway separately
 
-Take a moment to learn more about [Istio installation profiles](https://istio.io/latest/docs/setup/additional-setup/config-profiles/){target=_blank}.
+    Use the _empty_ profile with the ingress gateway component added "a la carte."
+
+    1. pick a namespace: istio-ingress
+
+        ```shell
+        k create ns istio-ingress
+        ```
+
+    1. Create the `ingress.yaml` installation configuration.
+
+        ???+ tldr "ingress.yaml"
+            ```yaml linenums="1" hl_lines="7 11 16"
+            --8<-- "install/ingress.yaml"
+            ```
+
+        Note:
+
+        1. The use of the `empty` profile
+        1. The association to the above-created namespace
+        1. The assignment of a label to the gateway deployment (so that later, we can define `Gateway` custom resources that target this component).
+
+    1. Install the Gateway component
+
+        ```shell
+        istioctl install -f ingress.yaml
+        ```
+
+    !!! warning "One minor caveat"
+
+        In subsequent instructions that reference your ingress gateway component, remember to reference the `istio-ingress` namespace in lieu of the `istio-system` which is the namespace that the simpler installation recipe uses.
 
 ## Verify that Istio is installed
 
