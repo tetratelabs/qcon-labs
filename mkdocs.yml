@@ -3,8 +3,7 @@ repo_url: https://github.com/tetratelabs/qcon-labs
 edit_uri: edit/main/docs
 theme:
   name: material
-  custom_dir: overrides
-  tetrate_logo: assets/tetrate-logo-white.png
+  logo: assets/tetrate-logo-white.png
   palette:
     - scheme: default
       toggle:
