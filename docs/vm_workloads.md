@@ -31,7 +31,7 @@ Once the installation completes, we can deploy a separate ingress gateway that w
 
 The Istio package we downloaded contains a script we can use to generate the YAML that will deploy an Istio operator that creates the new gateway called `istio-eastwestgateway`.
 
-Go to the folder where you downloaded Istio (e.g. `istio-1.14.3`) and run this script:
+Go to the folder where you downloaded Istio (e.g. `istio-{{istio.version}}`) and run this script:
 
 ```shell
 samples/multicluster/gen-eastwest-gateway.sh --single-cluster | istioctl install -y -f -
@@ -65,6 +65,8 @@ virtualservice.networking.istio.io/istiod-vs created
 ```
 
 The above resources (Gateway and VirtualService) configure the eastwest-gateway to listen on ports 15012 (used for control plane - istiod) and 15017 (used for pilot discovery validation webhook). The VirtualService matches the requests on the two ports and then routes them to istiod to appropriate ports.
+
+The purpose of the eastwest-gateway in this scenario will be to allow the Istio sidecar proxy on the virtual machine to call the control plane running inside the cluster. The second role of the eastwest-gateway is in the scenarios where the VM and Kubernetes cluster are running in different networks. In that scenario, the workloads communicate to each through the eastwest-gateway.
 
 ## Preparing virtual machine namespace and files
 
@@ -138,17 +140,27 @@ warning: a security token for namespace vm-namespace and service account vm-sa h
 configuration generation into directory /vm-files was successful
 ```
 
->VM onboarding is not a one-time action. Whenever we update the WorkloadGroup resource, we also have to re-create the configuratio and update the virtual machine.
+??? Warning "VM onboarding is not a one-time action"
+      Whenever we update the WorkloadGroup resource, we also have to re-create the configuration (run the `istioctl x workload entry configure` command) and copy the generated files to the virtual machine.
 
 The above command generates the following files:
 
 - `cluster.env`: Contains metadata that identifies what namespace, service account, network CIDR and (optionally) what inbound ports to capture.
-- `istio-token`: A Kubernetes token used to get certs from the CA.
+- `istio-token`: A Kubernetes token used to get certs from the CA. This is the the token from the `vm-sa` service account that's created using the `istio-ca` audience.
 - `mesh.yaml`: Provides `ProxyConfig` to configure `discoveryAddress`, health-checking probes, and some authentication options.
-- `root-cert.pem`: The root certificate used to authenticate.
+- `root-cert.pem`: The root certificate used to authenticate. Comes from the `istio-ca-root-cert` ConfigMap in the `vm-namespace` namespace.
 - `hosts`: An addendum to /etc/hosts that the proxy will use to reach istiod for xDS.
 
 We'll copy the these files to the virtual machine, to locations known by the Envoy proxy. Note that the location where the files are copied can be customized, but it requires updates to the initial Envoy proxy configuration.
+
+The files provide the Envoy proxy bootstrap configuration - they tell the proxy the information about the workload (e.g. the workload and service name and the namespace, the WorkloadGroup name, cluster ID and mesh ID and others).
+
+To onboard the VM workload the sidecar also nees the Istio mTLS certificate. When the sidcear starts it uses the `istio-token` file to prove its identity to Istio control plane and to obtain the Istio mTLS certificate. The mTLS certificate is stored on disk for cases when the VM restarts.
+
+The expiration time on the initial `istio-token` is 1 hour. If it takes you longer than 1 hour to onboard the VM, you' ll need to re-run the `istioctl x workload entry configure` command to generate a new token.
+
+Once the VM obtains the mTLS certificate, it can use it to prove its identity. The certificate is valid for 24 hours and the proxy will automatically refresh it before it expires.
+
 
 ## Create the Virtual Machine
 
@@ -178,9 +190,7 @@ We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
 
 ## Applying configuration to the Virtual Machine
 
-Now it's time to configure the Virtual Machine.
-
-> In this example, we run a simple Python HTTP server on port 80. You could configure any other service on a different port. Just make sure you configure the security and firewall rules accordingly.
+Now it's time to configure the Virtual machine. In this example, we run a simple Python HTTP server on port 80. You could configure any other service on a different port. Just make sure you configure the security and firewall rules accordingly.
 
 1. Copy the files from `vm-files` folder to the home folder on the instance. Replace `INSTANCE_ZONE` accordingly.
 
@@ -217,7 +227,7 @@ Now it's time to configure the Virtual Machine.
 4. Download and install the Istio sidecar package:
 
    ```shell
-   curl -LO https://storage.googleapis.com/istio-release/releases/1.14.3/deb/istio-sidecar.deb
+   curl -LO https://storage.googleapis.com/istio-release/releases/{{istio.version}}/deb/istio-sidecar.deb
    sudo dpkg -i istio-sidecar.deb
    ```
 
@@ -254,24 +264,24 @@ You can see the WorkloadEntry creation _in action_ as follows:
 
 1. Watch for Workloadentry resources using the `--watch` flag
 
-   ```shell
-   kubectl get workloadentry -n vm-namespace --watch
-   ```
+      ```shell
+      kubectl get workloadentry -n vm-namespace --watch
+      ```
 
-1. On the VM, start the Istio service:
+2. On the VM, start the Istio service:
 
-   ```shell
-   sudo systemctl start istio
-   ```
+      ```shell
+      sudo systemctl start istio
+      ```
 
-1. You should see the WorkloadEntry appear
+3. You should see the WorkloadEntry appear
 
-   ```console
-   NAME                  AGE   ADDRESS
-   hello-vm-10.128.0.7   12m   10.128.0.7
-   ```
+      ```console
+      NAME                  AGE   ADDRESS
+      hello-vm-10.128.0.7   12m   10.128.0.7
+      ```
 
-1. Press Ctrl-C to stop watching for changes.
+4. Press Ctrl-C to stop watching for changes.
 
 On the VM, you can check that the `istio` service is running with `systemctl status istio`. Alternatively, we can look at the contents of the `/var/log/istio/istio.log` to see that the proxy was successfully started.
 
