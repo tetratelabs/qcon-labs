@@ -1,7 +1,5 @@
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
-metadata:
-  name: control-plane
 spec:
   profile: demo
   meshConfig:

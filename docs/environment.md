@@ -28,7 +28,7 @@
     - Your instructor will demonstrate the process of accessing and configuring your environment, described below.
     - The instructions below explain in detail how to access your account, select your project, and launch the cloud shell.
 
-1. Local:  Yet another option is to run a Kubernetes cluster on your local machine using Minikube, Kind, or similar tooling.  This option entails minimum resource (cpu and memory) requirements *and* you will need to ensure that ingress to loadbalancer-type services functions.  Here is a recipe for creating a local Kubernetes cluster with [k3d](https://k3d.io/):
+1. Local:  Yet another option is to run a Kubernetes cluster on your local machine using [Minikube](https://minikube.sigs.k8s.io/docs/start/){target=_blank}, [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/){target=_blank}, or similar tooling.  This option entails minimum resource (CPU and memory) requirements *and* you will need to ensure that ingress to loadbalancer-type services functions.  Here is a recipe for creating a local Kubernetes cluster with [k3d](https://k3d.io/){target=_blank}:
 
     ```shell
     k3d cluster create my-istio-cluster \
@@ -88,7 +88,7 @@ The Google Cloud Shell will serve as your terminal environment for these labs.
     kubectl version --short
     ```
 
-1. Generate a kubeconfig entry
+1. Generate a `kubeconfig` entry
 
     === "With the user interface"
 
