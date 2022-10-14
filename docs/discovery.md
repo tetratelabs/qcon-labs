@@ -1,8 +1,8 @@
 # Service discovery and load balancing
 
-In this lab you will spy on the Envoy configuration of the sidecars to confirm that workloads have been configured by Istio to know about other services and their endpoints.  Envoy's term for a service is a "cluster".
+In this lab you will spy on the Envoy configuration of the sidecars to confirm that workloads have been configured by Istio to know about other services and their endpoints.  Envoy's term for a service is a "cluster".  The `istioctl` CLI's two diagnostic commands `proxy-status` and `proxy-config` will be of assistance for this purpose.
 
-Second, you will scale the customers service to two replicas to witness and confirm that clients indeed load-balance requests across a service's endpoints.
+Second, you will scale the customers service to two replicas in order to witness and confirm that clients indeed load-balance requests across a target service's endpoints.
 
 ## Clusters and endpoints
 
