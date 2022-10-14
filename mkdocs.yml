@@ -27,6 +27,7 @@ nav:
     - install.md
     - sidecar-injection.md
     - the-app.md
+    - discovery.md
     - ingress.md
     - dashboards.md
     - traffic-shifting.md
