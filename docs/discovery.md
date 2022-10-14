@@ -1,6 +1,9 @@
 # Service discovery and load balancing
 
-In this lab you will spy on the Envoy configuration of the sidecars to confirm that workloads are indeed configured (by Istio) to know about other services and their endpoints.  Envoy's term for a service is a "cluster".  The `istioctl` CLI's two diagnostic commands `proxy-status` and `proxy-config` will be of assistance for this purpose.
+This lab explores service discovery and load balancing in Istio.
+
+You will begin by spying on Istio and the Envoy configuration of the sidecars to confirm that workloads are indeed configured by Istio to know about other services and their endpoints.
+The `istioctl` CLI's two diagnostic commands `proxy-status` and `proxy-config` will be of assistance for this purpose.
 
 Next, you will scale the `customers` service to two replicas in order to witness and confirm that clients indeed load-balance requests across a target service's endpoints.
 
@@ -8,19 +11,41 @@ Finally, you will apply a destination rule to alter the load balancing algorithm
 
 ## Clusters and endpoints
 
-Review the deployments in the `default` namespace:
-
-```shell
-kubectl get deploy
-```
-
 Confirm that `istiod` knows about the workloads running on Kubernetes:
 
 ```shell
 istioctl proxy-status
 ```
 
-Confirm that `web-frontend` knows about other services (aka "clusters" in Envoy parlance), including the `customers` service:
+### The service registry
+
+Istio maintains an internal service registry which can be observed through a debug endpoint, as follows:
+
+1. Capture the name of the istiod pod to an environment variable
+
+    ```shell
+    export ISTIO_POD=$(kubectl get pod -n istio-system -l app=istiod -ojsonpath='{.items[0].metadata.name}')^
+    ```
+
+1. `curl` the registry endpoint:
+
+    ```shell
+    kubectl exec -n istio-system $ISTIO_POD -- curl localhost:15014/debug/registryz
+    ```
+
+    The output can be prettified with a tool such as [`jq`](https://stedolan.github.io/jq/){target=_blank}.
+
+### The sidecar configuration
+
+Review the deployments in the `default` namespace:
+
+```shell
+kubectl get deploy
+```
+
+Envoy's term for a service is "cluster".
+
+Confirm that `web-frontend` knows about other services, including the `customers` service:
 
 ```shell
 istioctl proxy-config clusters deploy/web-frontend
@@ -46,11 +71,13 @@ Scale `customers` to two replicas:
 kubectl scale deploy customers-v1 --replicas 2
 ```
 
-Re-run the `proxy-config endpoints` command; you should now see two endpoints:
+Re-run the above `proxy-config endpoints` command; you should now see two endpoints:
 
 ```shell
 istioctl proxy-config endpoints deploy/web-frontend --cluster "outbound|80||customers.default.svc.cluster.local"
 ```
+
+### Check the logs
 
 1. Capture the name of each `customers` workload in environment variables:
 
