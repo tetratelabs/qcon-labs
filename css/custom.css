@@ -1,0 +1,9 @@
+:root>* {
+  --md-primary-fg-color: #000717;
+  --md-accent-fg-color: #F05623;
+}
+
+/* Set the color of the <a> elements for any color scheme */
+[data-md-color-scheme] {
+  --md-typeset-a-color: #F05623;
+}
