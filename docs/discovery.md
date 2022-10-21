@@ -24,7 +24,7 @@ Istio maintains an internal service registry which can be observed through a deb
 1. Capture the name of the istiod pod to an environment variable
 
     ```shell
-    export ISTIO_POD=$(kubectl get pod -n istio-system -l app=istiod -ojsonpath='{.items[0].metadata.name}')^
+    export ISTIO_POD=$(kubectl get pod -n istio-system -l app=istiod -ojsonpath='{.items[0].metadata.name}')
     ```
 
 1. `curl` the registry endpoint:
