@@ -25,12 +25,13 @@ nav:
   - Morning session:
     - environment.md
     - install.md
-    - sidecar-injection.md
     - the-app.md
-    - discovery.md
     - ingress.md
     - dashboards.md
     - traffic-shifting.md
+    - Time permitting:
+      - sidecar-injection.md
+      - discovery.md
   - Afternoon session:
     - circuit_breakers.md
     - security.md
