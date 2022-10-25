@@ -1,161 +1,159 @@
-# Security - Access control
+# Security
 
-In this lab, we will learn how to use an authorization policy to control access between workloads.
+In this lab we explore some of the security features of the Istio service mesh.
 
-## Prerequisites and setup
+## Mutual TLS
 
-Configure the ingress gateway to accept requests on port 80, for any host name:
+By default, Istio is configured such that when a service is deployed onto the mesh, it will take advantage of mutual TLS:
 
-??? note "Click for gateway-all.yaml"
+- the service is given an identity as a function of its associated service account and namespace
+- an x.509 certificate is issued to the workload (and regularly rotated) and used to identify the workload in calls to other services
 
-    ```yaml linenums="1" title="gateway-all.yaml"
-    --8<-- "security/gateway-all.yaml"
+In the [observability](dashboards.md#kiali) lab, we looked at the Kiali dashboard and noted the lock icons indicating that traffic was secured with mTLS.
+
+### Can a workload receive plain-text requests?
+
+We can test whether a mesh workload, such as the customers service, will allow a plain-text request as follows:
+
+1. Create a separate namespace that is not configured with automatic injection.
+
+    ```{.shell .language-shell}
+    kubectl create ns otherns
     ```
 
-Save the above YAML to `gateway-all.yaml` and deploy the Gateway using `kubectl apply -f gateway-all.yaml`.
+1. Deploy `sleep` to that namespace
 
-Next, create the Web frontend deployment, service account, service, and a VirtualService.
-
-??? note "Click for web-frontend.yaml"
-    ```yaml linenums="1" title="web-frontend.yaml"
-    --8<-- "security/web-frontend.yaml"
+    ```{.shell .language-shell}
+    kubectl apply -f sleep.yaml -n otherns
     ```
 
-Save the above YAML to `web-frontend.yaml` and create the resource using `kubectl apply -f web-frontend.yaml`.
+1. Verify that the sleep pod has no sidecars:
 
-Finally, deploy the `customers` service.
-
-??? note "Click for customers.yaml"
-    ```yaml linenums="1" title="customers.yaml"
-    --8<-- "security/customers.yaml"
+    ```{.shell .language-shell}
+    kubectl get pod -n otherns
     ```
 
-Save the above YAML to `customers.yaml` and create the resources with `kubectl apply -f customers.yaml`.
+1. Call the customer service from that pod:
 
-Set the `GATEWAY_IP` variable:
+    ```{.shell .language-shell}
+    SLEEP_POD=$(kubectl get pod -l app=sleep -n otherns -ojsonpath='{.items[0].metadata.name}')
+    kubectl exec -n otherns $SLEEP_POD -- curl -s customers.default
+    ```
 
-```shell
-export GATEWAY_IP=$(kubectl get svc istio-ingressgateway -n istio-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+The output should look like a list of customers in JSON format.
+
+We conclude that Istio is configured by default to allow plain-text request.
+This is called _permissive mode_ and is specifically designed to allow services that have not yet fully onboarded onto the mesh to participate.
+
+!!! question "Challenge"
+
+    Above, you were asked to create a namespace without marking it for sidecar injection in order to effectively have a client that can call other services without employing mutual TLS.
+
+    Can you find another way of achieving the same result?  Can a client be configured explicitly to not use mTLS?
+
+### Enable strict mode
+
+Istio provides the `PeerAuthentication` custom resource to define peer authentication policy.
+
+1. Apply the following peer authentication policy.
+
+    ??? tldr "mtls-strict.yaml"
+        ```yaml linenums="1"
+        --8<-- "security/mtls-strict.yaml"
+        ```
+
+    !!! info
+
+        Strict mtls can be enabled globally by setting the namespace to the name of the Istio root namespace, which by default is `istio-system`
+
+1. Verify that the peer authentication has been applied.
+
+    ```{.shell .language-shell}
+    kubectl get peerauthentication
+    ```
+
+### Verify that plain-text requests are no longer permitted
+
+```{.shell .language-shell}
+kubectl exec -n otherns $SLEEP_POD -- curl customers.default
 ```
 
-Make an HTTP request to the `GATEWAY_IP` and confirm that the resulting web frontend page displays the data from the `customers` service.
+The console output should indicate that the _connection was reset by peer_.
 
-## Denying all requests between services
 
-Create an authorization policy that denies all requests in the default namespace.
+## Security in depth
 
-```yaml linenums="1" title="deny-all.yaml"
---8<-- "security/deny-all.yaml"
-```
+Another important layer of security is to define an authorization policy, in which we allow only specific services to communicate with other services.
 
-Save the above YAML to `deny-all.yaml` and create the policy using `kubectl apply -f deny-all.yaml`.
+At the moment, any container can, for example, call the customers service or the web-frontend service.
 
-Attempt to access `GATEWAY_IP`, and confirm the following response:
+1. Capture the name of the sleep pod running in the default namespace
 
-```console
-RBAC: access denied
-```
+    ```{.shell .language-shell}
+    SLEEP_POD=$(kubectl get pod -l app=sleep -ojsonpath='{.items[0].metadata.name}')
+    ```
 
-Similarly, from a Pod running inside the cluster, a request from within the default namespace to either the web frontend or the customer service should result in the same error:
+1. Call the `customers` service.
 
-```shell
-kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm
-```
+    ```{.shell .language-shell}
+    kubectl exec $SLEEP_POD -- curl -s customers
+    ```
 
-```shell
-[ root@curl:/ ]$ curl customers
-RBAC: access denied
-[ root@curl:/ ]$ curl web-frontend
-RBAC: access denied
-[ root@curl:/ ]$
-```
+1. Call the `web-frontend` service.
 
-In both cases, access is denied. To exit the curl pod, type `exit`.
+    ```{.shell .language-shell}
+    kubectl exec $SLEEP_POD -- curl -s web-frontend | head
+    ```
 
-## Allow requests from ingress to `web-frontend`
+Both calls succeed.
 
-Allow requests originating from the ingress gateway to the `web-frontend` application using an ALLOW action. In the rules section, we specify the source namespace (`istio-system`) of the ingress gateway, and the ingress gateway's service account name in the `principals` field.
+We wish to apply a policy in which _only `web-frontend` is allowed to call `customers`_, and _only the ingress gateway can call `web-frontend`_.
 
-```yaml linenums="1" title="allow-ingress-frontend.yaml"
---8<-- "security/allow-ingress-frontend.yaml"
-```
+Study the below authorization policy.
 
-Save the above YAML to `allow-ingress-frontend.yaml` and create the policy using `kubectl apply -f allow-ingress-frontend.yaml`.
+!!! tldr "authz-policy-customers.yaml"
+    ```yaml linenums="1"
+    --8<-- "security/authz-policy-customers.yaml"
+    ```
 
-A direct request to the `GATEWAY_IP` will produce a different error this time:
+- The `selector` section specifies that the policy applies to the `customers` service.
+- Note how the rules have a "from: source: " section indicating who is allowed in.
+- The nomenclature for the value of the `principals` field comes from the [spiffe](https://spiffe.io/docs/latest/spiffe-about/overview/){target=_blank} standard.  Note how it captures the service account name and namespace associated with the `web-frontend` service.  This identify is associated with the x.509 certificate used by each service when making secure mtls calls to one another.
 
-```shell
-curl http://$GATEWAY_IP
-```
+Tasks:
 
-```console
-"Request failed with status code 403"
-```
+- [ ] Apply the policy to your cluster.
+- [ ] Verify that you are no longer able to reach the `customers` pod from the `sleep` pod
 
-This error is coming from the `customers` service - remember we allowed calls to the web frontend. However, `web-frontend` still can't make calls to the `customers` service.
+### Challenge
 
-Go back to the `curl` Pod running inside the cluster.  An attempt to request `http://web-frontend` will result in an RBAC error.
+Can you come up with a similar authorization policy for `web-frontend`?
 
-The DENY policy is in effect, and we are only allowing calls to be made from the ingress gateway.
+- Use a copy of the `customers` authorization policy as a starting point
+- Give the resource an apt name
+- Revise the selector to match the `web-frontend` service
+- Revise the rule to match the principal of the ingress gateway
 
-## Allow requests from `web-frontend` to `customers`
+!!! hint
 
-When we deployed the `web-frontend`, we also created a service account for the Pod to use. Otherwise, all Pods in the namespace are assigned the default service account.  Using the service account we give the Pods an identity.
+    The ingress gateway has its own identity.
 
-Use that service account to specify where the customer service calls can come from.
+    Here is a command which can help you find the name of the service account associated with its identity:
 
-```yaml linenums="1" title="allow-web-frontend-customers.yaml"
---8<-- "security/allow-web-frontend-customers.yaml"
-```
+    ```{.shell .language-shell}
+    kubectl get pod -n istio-system -l app=istio-ingressgateway -o yaml | grep serviceAccountName
+    ```
 
-Save the above YAML to `allow-web-frontend-customers.yaml` and create the policy using `kubectl apply -f allow-web-frontend-customers.yaml`.
+    Use this service account name together with the namespace that the ingress gateway is running in to specify the value for the `principals` field.
 
-As soon as the policy is created, we will see the web frontend working again - it will get the customer service responses. You can verify that it works by opening the GATEWAY_IP in the browser or using cURL to send the request to the GATEWAY_IP.
 
-```shell
-export GATEWAY_IP=$(kubectl get svc istio-ingressgateway -n istio-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-curl http://$GATEWAY_IP
-```
+### Test it
 
-```console
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Web Frontend</title>
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
-  <body class="bg-tetrate-black">
-...
-```
+Don't forget to verify that the policy is enforced.
 
-If we create a Pod inside the cluster again to try and directly access `web-frontend` and `customers` service, the calls will continue to fail, which is expected because we haven't explicitly allowed calls from the cURL Pod:
+- Call both services again from the sleep pod and ensure communication is no longer allowed.
+- The console output should contain the message _RBAC: access denied_.
 
-```shell
-kubectl run curl --image=radial/busyboxplus:curl -i --tty --rm
-```
+## Next
 
-```console
-If you don't see a command prompt, try pressing enter.
-[ root@curl:/ ]$ curl customers
-RBAC: access denied
-[ root@curl:/ ]$ curl web-frontend
-RBAC: access denied
-[ root@curl:/ ]$
-```
-
-## Conclusion
-
-We have used multiple authorization policies to explicitly allow calls from the ingress to the front end and from the `web-frontend` to the `customers` service. Using a deny-all policy is a good way to start because we can control, manage, and then explicitly allow the communication we want to happen between services.
-
-## Cleanup
-
-Delete the Deployments, Services, VirtualServices, and the Gateway:
-
-```shell
-kubectl delete deploy web-frontend customers-v1
-kubectl delete svc customers web-frontend
-kubectl delete vs --all
-kubectl delete gateway gateway
-kubectl delete authorizationpolicy --all
-kubectl delete pod curl
-```
+In the next lab we show how to use Istio's traffic management features to upgrade the customers service with zero downtime.
