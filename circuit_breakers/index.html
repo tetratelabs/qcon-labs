@@ -990,7 +990,6 @@
 <p>The maximum number of requests per connection.</p>
 </li>
 </ol>
-<p>Here's what the above values represent:</p>
 <p>Save the above YAML to <code>cb-web-frontend.yaml</code> and apply the changes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl apply -f cb-web-frontend.yaml
 </code></pre></div>
@@ -1234,7 +1233,7 @@
 </code></pre></div>
 <details class="note">
 <summary>Note</summary>
-<p>Other metrics that we can look at are <code>ejections_consecutive_5xx</code>,  <code>ejections_enforced_total</code> or any other metric with the <code>outlier_detection</code> in the name. You can find the full list of metric names and there descriptions in the <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection">Envoy documentation</a>.</p>
+<p>Other metrics that we can look at are <code>ejections_consecutive_5xx</code>,  <code>ejections_enforced_total</code> or any other metric with <code>outlier_detection</code> in its name. You can find the full list of metric names and there descriptions in the <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection">Envoy documentation</a>.</p>
 </details>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <p>To clean up all resources, run:</p>

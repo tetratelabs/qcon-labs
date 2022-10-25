@@ -710,78 +710,82 @@
 <h2 id="create-the-virtual-machine">Create the Virtual Machine<a class="headerlink" href="#create-the-virtual-machine" title="Permanent link">&para;</a></h2>
 <p>We'll be running the virtual machine in GCP, just like the Kubernetes cluster.</p>
 <ol>
-<li>Create the VM</li>
-</ol>
+<li>
+<p>Create the VM</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gcloud compute instances create my-mesh-vm --tags<span class="o">=</span>mesh-vm --machine-type<span class="o">=</span>n1-standard-2
 </code></pre></div>
-<ol>
-<li>Obtain the cluster's Pod IP address range.</li>
-</ol>
+</li>
+<li>
+<p>Obtain the cluster's Pod IP address range.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">export</span> <span class="nv">CLUSTER_POD_CIDR</span><span class="o">=</span><span class="k">$(</span>gcloud container clusters list --format<span class="o">=</span>json <span class="p">|</span> jq -r <span class="s1">&#39;.[0].clusterIpv4Cidr&#39;</span><span class="k">)</span>
 </code></pre></div>
-<ol>
-<li>Create a firewall rule to allow ingress on port 80 from the cluster pods to the VM.</li>
-</ol>
+</li>
+<li>
+<p>Create a firewall rule to allow ingress on port 80 from the cluster pods to the VM.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gcloud compute firewall-rules create <span class="s2">&quot;cluster-pods-to-vm&quot;</span> <span class="se">\</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  --source-ranges<span class="o">=</span><span class="nv">$CLUSTER_POD_CIDR</span> <span class="se">\</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  --target-tags<span class="o">=</span>mesh-vm <span class="se">\</span>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  --action<span class="o">=</span>allow <span class="se">\</span>
 <a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  --rules<span class="o">=</span>tcp:80
 </code></pre></div>
+</li>
+</ol>
 <h2 id="applying-configuration-to-the-virtual-machine">Applying configuration to the Virtual Machine<a class="headerlink" href="#applying-configuration-to-the-virtual-machine" title="Permanent link">&para;</a></h2>
 <p>Now it's time to configure the Virtual machine. In this example, we run a simple Python HTTP server on port 80. You could configure any other service on a different port. Just make sure you configure the security and firewall rules accordingly.</p>
 <ol>
-<li>Copy the files from <code>vm-files</code> folder to the home folder on the instance. Replace <code>INSTANCE_ZONE</code> accordingly.</li>
-</ol>
+<li>
+<p>Copy the files from <code>vm-files</code> folder to the home folder on the instance. Replace <code>INSTANCE_ZONE</code> accordingly.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gcloud compute scp vm-files/* my-mesh-vm:~ --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="go">  cluster.env                                                       100%  627   626.9KB/s   00:00</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="go">  hosts                                                             100%   36    50.7KB/s   00:00</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="go">  istio-token                                                       100%  905     1.4MB/s   00:00</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="go">  mesh.yaml                                                         100%  668   918.7KB/s   00:00</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="go">  root-cert.pem                                                     100% 1094     1.7MB/s   00:00</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="go">cluster.env              100%  627   626.9KB/s   00:00</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="go">hosts                    100%   36    50.7KB/s   00:00</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="go">istio-token              100%  905     1.4MB/s   00:00</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="go">mesh.yaml                100%  668   918.7KB/s   00:00</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="go">root-cert.pem            100% 1094     1.7MB/s   00:00</span>
 </code></pre></div>
-<ol>
-<li>SSH into the instance and copy the root certificate to <code>/etc/certs</code> (you can use the command from the instance details page in the SSH dropdown):</li>
-</ol>
+</li>
+<li>
+<p>SSH into the instance and copy the root certificate to <code>/etc/certs</code> (you can use the command from the instance details page in the SSH dropdown):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gcloud beta compute ssh --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span> my-mesh-vm
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo mkdir -p /etc/certs
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo cp root-cert.pem /etc/certs/root-cert.pem
 </code></pre></div>
-<ol>
-<li>Copy the <code>istio-token</code> file to <code>/var/run/secrets/tokens</code> folder:</li>
-</ol>
+</li>
+<li>
+<p>Copy the <code>istio-token</code> file to <code>/var/run/secrets/tokens</code> folder:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo mkdir -p /var/run/secrets/tokens
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo cp istio-token /var/run/secrets/tokens/istio-token
 </code></pre></div>
-<ol>
-<li>Download and install the Istio sidecar package:</li>
-</ol>
+</li>
+<li>
+<p>Download and install the Istio sidecar package:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo dpkg -i istio-sidecar.deb
 </code></pre></div>
-<ol>
-<li>Copy <code>cluster.env</code> to <code>/var/lib/istio/envoy/</code>:</li>
-</ol>
+</li>
+<li>
+<p>Copy <code>cluster.env</code> to <code>/var/lib/istio/envoy/</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo cp cluster.env /var/lib/istio/envoy/cluster.env
 </code></pre></div>
-<ol>
-<li>Copy Mesh config (<code>mesh.yaml</code>) to <code>/etc/istio/config/mesh</code>:</li>
-</ol>
+</li>
+<li>
+<p>Copy Mesh config (<code>mesh.yaml</code>) to <code>/etc/istio/config/mesh</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo cp mesh.yaml /etc/istio/config/mesh
 </code></pre></div>
-<ol>
-<li>Add the istiod host to the <code>/etc/hosts</code> file:</li>
-</ol>
+</li>
+<li>
+<p>Add the istiod host to the <code>/etc/hosts</code> file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo sh -c <span class="s1">&#39;cat $(eval echo ~$SUDO_USER)/hosts &gt;&gt; /etc/hosts&#39;</span>
 </code></pre></div>
-<ol>
-<li>Change the ownership of files in <code>/etc/certs</code> and <code>/var/lib/istio/envoy</code> to the Istio proxy:</li>
-</ol>
+</li>
+<li>
+<p>Change the ownership of files in <code>/etc/certs</code> and <code>/var/lib/istio/envoy</code> to the Istio proxy:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo mkdir -p /etc/istio/proxy
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
 </code></pre></div>
+</li>
+</ol>
 <p>With all files in place, we are ready to start Istio on the virtual machine.</p>
 <p>Because we used the VM auto-registration, Istio automatically creates the WorkloadEntry resource for us shortly after we start the Istio service on the VM.</p>
 <p>You can see the WorkloadEntry creation <em>in action</em> as follows:</p>
