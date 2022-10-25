@@ -108,7 +108,10 @@ serviceaccount/vm-sa created
 Next we'll create the WorkloadGroup resource using Istio CLI. Run the command to save the WorkloadGroup YAML to `workloadgroup.yaml`
 
 ```shell
-istioctl x workload group create --name "${VM_APP}" --namespace "${VM_NAMESPACE}" --labels app="${VM_APP}" --serviceAccount "${SERVICE_ACCOUNT}" > workloadgroup.yaml
+istioctl x workload group create --name "${VM_APP}" \
+  --namespace "${VM_NAMESPACE}" \
+  --labels app="${VM_APP}" \
+  --serviceAccount "${SERVICE_ACCOUNT}" > workloadgroup.yaml
 ```
 
 Here's how the contents of the `workloadgroup.yaml` should look like:
@@ -127,7 +130,11 @@ spec:
     serviceAccount: vm-sa
 ```
 
-Save the above YAML to `workloadgroup.yaml` and create the resource with `kubectl apply -f workloadgroup.yaml`.
+Save the above YAML to `workloadgroup.yaml` and create the resource:
+
+```shell
+kubectl apply -f workloadgroup.yaml
+```
 
 Virtual machine needs information about the cluster and Istio's control plane to connect to it. To generate the required files, we can run `istioctl x workload entry` command. We save all generated files to the `WORK_DIR`:
 
@@ -303,7 +310,11 @@ From a different terminal window, we can now deploy a Hello world application to
     --8<-- "vm-workloads/hello-world.yaml"
     ```
 
-Save the above YAML to `hello-world.yaml` and deploy it using `kubectl apply -f hello-world.yaml`.
+Save the above YAML to `hello-world.yaml` and deploy it:
+
+```shell
+kubectl apply -f hello-world.yaml
+```
 
 Wait for the Pods to become ready and then go back to the virtual machine and try to access the Kubernetes service:
 
@@ -335,7 +346,11 @@ What we want to do next is add the workload (Python HTTP service) to the mesh. F
 --8<-- "vm-workloads/hello-vm-service.yaml"
 ```
 
-Save the above YAML to `hello-vm-service.yaml` and deploy it to the VM namespace using with `kubectl apply -f hello-vm-service.yaml`.
+Save the above YAML to `hello-vm-service.yaml` and deploy it to the VM namespace:
+
+```shell
+kubectl apply -f hello-vm-service.yaml
+```
 
 We can now use the Kubernetes service name `hello-vm.vm-namespace` to access the workload running on the virtual machine (the Python server). Let's run a Pod inside the cluster and try to access the service from there:
 
