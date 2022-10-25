@@ -17,15 +17,14 @@ spec:
   template:
     metadata:
       annotations:
-            # sidecar.istio.io/statsInclusionPrefixes: "cluster.outbound|80||web-frontend.default.svc.cluster.local"
-            proxy.istio.io/config: |-
-                    proxyStatsMatcher:
-                      inclusionPrefixes:
-                      - "cluster.outbound"
-                      - "cluster_manager"
-                      - "listener_manager"
-                      - "server"
-                      - "cluster.xds-grpc"
+        proxy.istio.io/config: |-
+          proxyStatsMatcher:
+            inclusionPrefixes:
+            - "cluster.outbound"
+            - "cluster_manager"
+            - "listener_manager"
+            - "server"
+            - "cluster.xds-grpc"
       labels:
         app: web-frontend
         version: v1
@@ -39,7 +38,7 @@ spec:
             - containerPort: 8080
           env:
             - name: CUSTOMER_SERVICE_URL
-              value: 'http://customers.default.svc.cluster.local'
+              value: "http://customers.default.svc.cluster.local"
 ---
 kind: Service
 apiVersion: v1
@@ -63,7 +62,7 @@ spec:
   gateways:
     - frontend-gateway
   hosts:
-    - '*'
+    - "*"
   http:
     - route:
         - destination:
@@ -125,7 +124,7 @@ metadata:
   name: customers
 spec:
   hosts:
-    - 'customers.default.svc.cluster.local'
+    - "customers.default.svc.cluster.local"
   http:
     - route:
         - destination:
