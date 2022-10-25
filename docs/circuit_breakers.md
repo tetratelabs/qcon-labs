@@ -85,8 +85,6 @@ spec:
 
 3. The maximum number of requests per connection.
 
-Here's what the above values represent:
-
 Save the above YAML to `cb-web-frontend.yaml` and apply the changes:
 
 ```shell
@@ -311,7 +309,7 @@ cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ej
 ```
 
 ??? Note
-    Other metrics that we can look at are `ejections_consecutive_5xx`,  `ejections_enforced_total` or any other metric with the `outlier_detection` in the name. You can find the full list of metric names and there descriptions in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection).
+    Other metrics that we can look at are `ejections_consecutive_5xx`,  `ejections_enforced_total` or any other metric with `outlier_detection` in its name. You can find the full list of metric names and there descriptions in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection).
 
 ## Cleanup
 
