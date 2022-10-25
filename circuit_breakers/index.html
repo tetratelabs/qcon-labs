@@ -571,7 +571,7 @@
 <span class="normal"><a href="#__codelineno-0-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">install.istio.io/v1alpha1</span><span class="w"></span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IstioOperator</span><span class="w"></span>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">  </span><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">  </span><span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">demo</span><span class="w"></span>
 <a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">  </span><span class="nt">meshConfig</span><span class="p">:</span><span class="w"></span>
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="nt">defaultConfig</span><span class="p">:</span><span class="w"></span>
 <a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">      </span><span class="nt">proxyStatsMatcher</span><span class="p">:</span><span class="w"></span>
@@ -1170,28 +1170,41 @@
 <a id="__codelineno-23-31" name="__codelineno-23-31"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;500&#39;</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 </details>
-<p>Save the above YAML to <code>web-frontend-failing.yaml</code> and apply it to the cluster with <code>kubectl apply -f web-frontend-failing.yaml</code>.</p>
-<p>If we run Fortio we'll see that majority of the requests will be failing. That's because the <code>web-frontend-failing</code> deployment has more replicas than the "good" deployment.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c fortio -- /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning http://web-frontend
+<p>Save the above YAML to <code>web-frontend-failing.yaml</code> and apply it to the cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>kubectl apply -f web-frontend-failing.yaml
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="go">...</span>
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="go">Code 200 : 9 (18.0 %)</span>
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="go">Code 500 : 41 (82.0 %)</span>
+<p>If we run Fortio we'll see that majority of the requests will be failing. That's because the <code>web-frontend-failing</code> deployment has more replicas than the "good" deployment.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c fortio -- /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning http://web-frontend
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="go">...</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="go">Code 200 : 9 (18.0 %)</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="go">Code 500 : 41 (82.0 %)</span>
 </code></pre></div>
 <p>Let's look at an example of outlier detection configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend.default.svc.cluster.local</span><span class="w"></span>
-<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">  </span><span class="nt">trafficPolicy</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">    </span><span class="nt">outlierDetection</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">      </span><span class="nt">consecutive5xxErrors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># (1)</span><span class="w"></span>
-<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span><span class="w"> </span><span class="c1"># (2)</span><span class="w"></span>
-<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">      </span><span class="nt">baseEjectionTime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span><span class="w"> </span><span class="c1"># (3)</span><span class="w"></span>
-<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="w">      </span><span class="nt">maxEjectionPercent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w"> </span><span class="c1"># (4)</span><span class="w"></span>
-</code></pre></div>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">outlier-web-frontend.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-27-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-27-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-27-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-27-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-27-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-27-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-27-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-27-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-27-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-27-10">10</a></span>
+<span class="normal"><a href="#__codelineno-27-11">11</a></span>
+<span class="normal"><a href="#__codelineno-27-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
+<a id="__codelineno-27-2" name="__codelineno-27-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
+<a id="__codelineno-27-3" name="__codelineno-27-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-27-4" name="__codelineno-27-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
+<a id="__codelineno-27-5" name="__codelineno-27-5"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-27-6" name="__codelineno-27-6"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-27-7" name="__codelineno-27-7"></a><span class="w">  </span><span class="nt">trafficPolicy</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-27-8" name="__codelineno-27-8"></a><span class="w">    </span><span class="nt">outlierDetection</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-27-9" name="__codelineno-27-9"></a><span class="w">      </span><span class="nt">consecutive5xxErrors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span><span class="c1"># (1)</span><span class="w"></span>
+<a id="__codelineno-27-10" name="__codelineno-27-10"></a><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span><span class="w"> </span><span class="c1"># (2)</span><span class="w"></span>
+<a id="__codelineno-27-11" name="__codelineno-27-11"></a><span class="w">      </span><span class="nt">baseEjectionTime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span><span class="w"> </span><span class="c1"># (3)</span><span class="w"></span>
+<a id="__codelineno-27-12" name="__codelineno-27-12"></a><span class="w">      </span><span class="nt">maxEjectionPercent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w"> </span><span class="c1"># (4)</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
 <ol>
 <li>Number of 5xx errors in a row that will trigger the outlier detection. </li>
 <li>The interval at which the hosts are checked whether they need to be ejected.</li>
@@ -1199,20 +1212,20 @@
 <li>The maximum percentage of hosts that can be ejected.</li>
 </ol>
 <p>Save the YAML to <code>outlier-web-frontend.yaml</code> and apply it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kubectl apply -f outlier-web-frontend.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl apply -f outlier-web-frontend.yaml
 </code></pre></div>
 <p>If we repeat the test, we might get a similar distribution of responses the first time, however, if we repeat the command again (once the outliers were kicked out), we'll get a much better distribution:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c fortio -- /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning http://web-frontend
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c fortio -- /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning http://web-frontend
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="go">...</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="go">Code 200 : 50 (100.0 %)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="go">...</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="go">Code 200 : 50 (100.0 %)</span>
 </code></pre></div>
 <p>The reason for more HTTP 200 responses is because as soon as the failing hosts were ejected (failing Pods from the <code>web-frontend-failing</code> deployment), the requests were sent to the other host that doesn't fail. If we'd wait for a while (the 60s <code>baseEjectionTime</code>), the failing hosts would be brought back into the load balancing pool and we'd get a similar distribution of responses as before (majority of them failing).</p>
 <p>We can also look at the metrics from the outlier detection in the same way we did for the circuit breakers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c istio-proxy -- pilot-agent request GET stats <span class="p">|</span> grep web-frontend <span class="p">|</span> grep ejections_total
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl <span class="nb">exec</span> <span class="s2">&quot;</span><span class="nv">$FORTIO_POD</span><span class="s2">&quot;</span> -c istio-proxy -- pilot-agent request GET stats <span class="p">|</span> grep web-frontend <span class="p">|</span> grep ejections_total
 </code></pre></div>
 <p>Produces output similar to this:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="go">cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ejections_total: 4</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="go">cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ejections_total: 4</span>
 </code></pre></div>
 <details class="note">
 <summary>Note</summary>
@@ -1220,12 +1233,12 @@
 </details>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <p>To clean up all resources, run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl delete -f web-frontend-failing.yaml
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>kubectl delete -f cb-lab.yaml
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>kubectl delete -f fortio.yaml
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>kubectl delete dr --all
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>kubectl delete vs --all
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>kubectl delete gateway --all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>kubectl delete -f web-frontend-failing.yaml
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>kubectl delete -f cb-lab.yaml
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>kubectl delete -f fortio.yaml
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>kubectl delete dr --all
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>kubectl delete vs --all
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>kubectl delete gateway --all
 </code></pre></div>
 
 
