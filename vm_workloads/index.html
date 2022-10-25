@@ -668,7 +668,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="go">serviceaccount/vm-sa created</span>
 </code></pre></div>
 <p>Next we'll create the WorkloadGroup resource using Istio CLI. Run the command to save the WorkloadGroup YAML to <code>workloadgroup.yaml</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>istioctl x workload group create --name <span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_APP</span><span class="si">}</span><span class="s2">&quot;</span> --namespace <span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span> --labels <span class="nv">app</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_APP</span><span class="si">}</span><span class="s2">&quot;</span> --serviceAccount <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_ACCOUNT</span><span class="si">}</span><span class="s2">&quot;</span> &gt; workloadgroup.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>istioctl x workload group create --name <span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_APP</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  --namespace <span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_NAMESPACE</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  --labels <span class="nv">app</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VM_APP</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  --serviceAccount <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_ACCOUNT</span><span class="si">}</span><span class="s2">&quot;</span> &gt; workloadgroup.yaml
 </code></pre></div>
 <p>Here's how the contents of the <code>workloadgroup.yaml</code> should look like:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
@@ -683,16 +686,18 @@
 <a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
 <a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span><span class="nt">serviceAccount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vm-sa</span><span class="w"></span>
 </code></pre></div>
-<p>Save the above YAML to <code>workloadgroup.yaml</code> and create the resource with <code>kubectl apply -f workloadgroup.yaml</code>.</p>
-<p>Virtual machine needs information about the cluster and Istio's control plane to connect to it. To generate the required files, we can run <code>istioctl x workload entry</code> command. We save all generated files to the <code>WORK_DIR</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>istioctl x workload entry configure <span class="se">\</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  -f workloadgroup.yaml <span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  -o <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORK_DIR</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>  --autoregister <span class="se">\</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>  --clusterID <span class="s2">&quot;Kubernetes&quot;</span>
+<p>Save the above YAML to <code>workloadgroup.yaml</code> and create the resource:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl apply -f workloadgroup.yaml
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="go">warning: a security token for namespace vm-namespace and service account vm-sa has been generated and stored at /vm-files/istio-token</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="go">configuration generation into directory /vm-files was successful</span>
+<p>Virtual machine needs information about the cluster and Istio's control plane to connect to it. To generate the required files, we can run <code>istioctl x workload entry</code> command. We save all generated files to the <code>WORK_DIR</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>istioctl x workload entry configure <span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  -f workloadgroup.yaml <span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  -o <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORK_DIR</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  --autoregister <span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  --clusterID <span class="s2">&quot;Kubernetes&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="go">warning: a security token for namespace vm-namespace and service account vm-sa has been generated and stored at /vm-files/istio-token</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="go">configuration generation into directory /vm-files was successful</span>
 </code></pre></div>
 <details class="warning">
 <summary>VM onboarding is not a one-time action</summary>
@@ -716,23 +721,23 @@
 <ol>
 <li>
 <p>Create the VM</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gcloud compute instances create my-mesh-vm <span class="se">\</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  --tags<span class="o">=</span>mesh-vm <span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  --machine-type<span class="o">=</span>n1-standard-2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gcloud compute instances create my-mesh-vm <span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  --tags<span class="o">=</span>mesh-vm <span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  --machine-type<span class="o">=</span>n1-standard-2
 </code></pre></div>
 </li>
 <li>
 <p>Obtain the cluster's Pod IP address range.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">export</span> <span class="nv">CLUSTER_POD_CIDR</span><span class="o">=</span><span class="k">$(</span>gcloud container clusters list --format<span class="o">=</span>json <span class="p">|</span> jq -r <span class="s1">&#39;.[0].clusterIpv4Cidr&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">export</span> <span class="nv">CLUSTER_POD_CIDR</span><span class="o">=</span><span class="k">$(</span>gcloud container clusters list --format<span class="o">=</span>json <span class="p">|</span> jq -r <span class="s1">&#39;.[0].clusterIpv4Cidr&#39;</span><span class="k">)</span>
 </code></pre></div>
 </li>
 <li>
 <p>Create a firewall rule to allow ingress on port 80 from the cluster pods to the VM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>gcloud compute firewall-rules create <span class="s2">&quot;cluster-pods-to-vm&quot;</span> <span class="se">\</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  --source-ranges<span class="o">=</span><span class="nv">$CLUSTER_POD_CIDR</span> <span class="se">\</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  --target-tags<span class="o">=</span>mesh-vm <span class="se">\</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>  --action<span class="o">=</span>allow <span class="se">\</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>  --rules<span class="o">=</span>tcp:80
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gcloud compute firewall-rules create <span class="s2">&quot;cluster-pods-to-vm&quot;</span> <span class="se">\</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  --source-ranges<span class="o">=</span><span class="nv">$CLUSTER_POD_CIDR</span> <span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>  --target-tags<span class="o">=</span>mesh-vm <span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>  --action<span class="o">=</span>allow <span class="se">\</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>  --rules<span class="o">=</span>tcp:80
 </code></pre></div>
 </li>
 </ol>
@@ -741,54 +746,54 @@
 <ol>
 <li>
 <p>Copy the files from <code>vm-files</code> folder to the home folder on the instance. Replace <code>INSTANCE_ZONE</code> accordingly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>gcloud compute scp vm-files/* my-mesh-vm:~ --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>gcloud compute scp vm-files/* my-mesh-vm:~ --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="go">cluster.env              100%  627   626.9KB/s   00:00</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="go">hosts                    100%   36    50.7KB/s   00:00</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="go">istio-token              100%  905     1.4MB/s   00:00</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="go">mesh.yaml                100%  668   918.7KB/s   00:00</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="go">root-cert.pem            100% 1094     1.7MB/s   00:00</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="go">cluster.env              100%  627   626.9KB/s   00:00</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="go">hosts                    100%   36    50.7KB/s   00:00</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="go">istio-token              100%  905     1.4MB/s   00:00</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="go">mesh.yaml                100%  668   918.7KB/s   00:00</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="go">root-cert.pem            100% 1094     1.7MB/s   00:00</span>
 </code></pre></div>
 </li>
 <li>
 <p>SSH into the instance and copy the root certificate to <code>/etc/certs</code> (you can use the command from the instance details page in the SSH dropdown):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>gcloud beta compute ssh --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span> my-mesh-vm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>gcloud beta compute ssh --zone<span class="o">=[</span>INSTANCE_ZONE<span class="o">]</span> my-mesh-vm
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo mkdir -p /etc/certs
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo cp root-cert.pem /etc/certs/root-cert.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo mkdir -p /etc/certs
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo cp root-cert.pem /etc/certs/root-cert.pem
 </code></pre></div>
 </li>
 <li>
 <p>Copy the <code>istio-token</code> file to <code>/var/run/secrets/tokens</code> folder:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo mkdir -p /var/run/secrets/tokens
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo cp istio-token /var/run/secrets/tokens/istio-token
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo mkdir -p /var/run/secrets/tokens
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo cp istio-token /var/run/secrets/tokens/istio-token
 </code></pre></div>
 </li>
 <li>
 <p>Download and install the Istio sidecar package:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo dpkg -i istio-sidecar.deb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>sudo dpkg -i istio-sidecar.deb
 </code></pre></div>
 </li>
 <li>
 <p>Copy <code>cluster.env</code> to <code>/var/lib/istio/envoy/</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo cp cluster.env /var/lib/istio/envoy/cluster.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo cp cluster.env /var/lib/istio/envoy/cluster.env
 </code></pre></div>
 </li>
 <li>
 <p>Copy Mesh config (<code>mesh.yaml</code>) to <code>/etc/istio/config/mesh</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo cp mesh.yaml /etc/istio/config/mesh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo cp mesh.yaml /etc/istio/config/mesh
 </code></pre></div>
 </li>
 <li>
 <p>Add the istiod host to the <code>/etc/hosts</code> file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo sh -c <span class="s1">&#39;cat $(eval echo ~$SUDO_USER)/hosts &gt;&gt; /etc/hosts&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo sh -c <span class="s1">&#39;cat $(eval echo ~$SUDO_USER)/hosts &gt;&gt; /etc/hosts&#39;</span>
 </code></pre></div>
 </li>
 <li>
 <p>Change the ownership of files in <code>/etc/certs</code> and <code>/var/lib/istio/envoy</code> to the Istio proxy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo mkdir -p /etc/istio/proxy
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo mkdir -p /etc/istio/proxy
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
 </code></pre></div>
 </li>
 </ol>
@@ -798,18 +803,18 @@
 <ol>
 <li>
 <p>Watch for Workloadentry resources using the <code>--watch</code> flag</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl get workloadentry -n vm-namespace --watch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>kubectl get workloadentry -n vm-namespace --watch
 </code></pre></div>
 </li>
 <li>
 <p>On the VM, start the Istio service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>sudo systemctl start istio
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo systemctl start istio
 </code></pre></div>
 </li>
 <li>
 <p>You should see the WorkloadEntry appear</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="go">NAME                  AGE   ADDRESS</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="go">hello-vm-10.128.0.7   12m   10.128.0.7</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="go">NAME                  AGE   ADDRESS</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="go">hello-vm-10.128.0.7   12m   10.128.0.7</span>
 </code></pre></div>
 </li>
 <li>
@@ -822,129 +827,146 @@
 <p>From a different terminal window, we can now deploy a Hello world application to the Kubernetes cluster</p>
 <details class="note">
 <summary>Click for hello-world.yaml</summary>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">hello-world.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-33-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-33-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-33-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-33-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-33-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-33-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-33-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-33-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-33-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-33-10">10</a></span>
-<span class="normal"><a href="#__codelineno-33-11">11</a></span>
-<span class="normal"><a href="#__codelineno-33-12">12</a></span>
-<span class="normal"><a href="#__codelineno-33-13">13</a></span>
-<span class="normal"><a href="#__codelineno-33-14">14</a></span>
-<span class="normal"><a href="#__codelineno-33-15">15</a></span>
-<span class="normal"><a href="#__codelineno-33-16">16</a></span>
-<span class="normal"><a href="#__codelineno-33-17">17</a></span>
-<span class="normal"><a href="#__codelineno-33-18">18</a></span>
-<span class="normal"><a href="#__codelineno-33-19">19</a></span>
-<span class="normal"><a href="#__codelineno-33-20">20</a></span>
-<span class="normal"><a href="#__codelineno-33-21">21</a></span>
-<span class="normal"><a href="#__codelineno-33-22">22</a></span>
-<span class="normal"><a href="#__codelineno-33-23">23</a></span>
-<span class="normal"><a href="#__codelineno-33-24">24</a></span>
-<span class="normal"><a href="#__codelineno-33-25">25</a></span>
-<span class="normal"><a href="#__codelineno-33-26">26</a></span>
-<span class="normal"><a href="#__codelineno-33-27">27</a></span>
-<span class="normal"><a href="#__codelineno-33-28">28</a></span>
-<span class="normal"><a href="#__codelineno-33-29">29</a></span>
-<span class="normal"><a href="#__codelineno-33-30">30</a></span>
-<span class="normal"><a href="#__codelineno-33-31">31</a></span>
-<span class="normal"><a href="#__codelineno-33-32">32</a></span>
-<span class="normal"><a href="#__codelineno-33-33">33</a></span>
-<span class="normal"><a href="#__codelineno-33-34">34</a></span>
-<span class="normal"><a href="#__codelineno-33-35">35</a></span>
-<span class="normal"><a href="#__codelineno-33-36">36</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span><span class="w"></span>
-<a id="__codelineno-33-2" name="__codelineno-33-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span><span class="w"></span>
-<a id="__codelineno-33-3" name="__codelineno-33-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-4" name="__codelineno-33-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-5" name="__codelineno-33-5"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-6" name="__codelineno-33-6"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-7" name="__codelineno-33-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-8" name="__codelineno-33-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<a id="__codelineno-33-9" name="__codelineno-33-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-10" name="__codelineno-33-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-11" name="__codelineno-33-11"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-12" name="__codelineno-33-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-13" name="__codelineno-33-13"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-14" name="__codelineno-33-14"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-15" name="__codelineno-33-15"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-16" name="__codelineno-33-16"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-17" name="__codelineno-33-17"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-18" name="__codelineno-33-18"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/tetratelabs/hello-world:1.0.0</span><span class="w"></span>
-<a id="__codelineno-33-19" name="__codelineno-33-19"></a><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span><span class="w"></span>
-<a id="__codelineno-33-20" name="__codelineno-33-20"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc</span><span class="w"></span>
-<a id="__codelineno-33-21" name="__codelineno-33-21"></a><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-22" name="__codelineno-33-22"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
-<a id="__codelineno-33-23" name="__codelineno-33-23"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-33-24" name="__codelineno-33-24"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
-<a id="__codelineno-33-25" name="__codelineno-33-25"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-33-26" name="__codelineno-33-26"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-27" name="__codelineno-33-27"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-28" name="__codelineno-33-28"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-29" name="__codelineno-33-29"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-30" name="__codelineno-33-30"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-31" name="__codelineno-33-31"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-32" name="__codelineno-33-32"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
-<a id="__codelineno-33-33" name="__codelineno-33-33"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-33-34" name="__codelineno-33-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-33-35" name="__codelineno-33-35"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
-<a id="__codelineno-33-36" name="__codelineno-33-36"></a><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">hello-world.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-34-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-34-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-34-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-34-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-34-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-34-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-34-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-34-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-34-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-34-10">10</a></span>
+<span class="normal"><a href="#__codelineno-34-11">11</a></span>
+<span class="normal"><a href="#__codelineno-34-12">12</a></span>
+<span class="normal"><a href="#__codelineno-34-13">13</a></span>
+<span class="normal"><a href="#__codelineno-34-14">14</a></span>
+<span class="normal"><a href="#__codelineno-34-15">15</a></span>
+<span class="normal"><a href="#__codelineno-34-16">16</a></span>
+<span class="normal"><a href="#__codelineno-34-17">17</a></span>
+<span class="normal"><a href="#__codelineno-34-18">18</a></span>
+<span class="normal"><a href="#__codelineno-34-19">19</a></span>
+<span class="normal"><a href="#__codelineno-34-20">20</a></span>
+<span class="normal"><a href="#__codelineno-34-21">21</a></span>
+<span class="normal"><a href="#__codelineno-34-22">22</a></span>
+<span class="normal"><a href="#__codelineno-34-23">23</a></span>
+<span class="normal"><a href="#__codelineno-34-24">24</a></span>
+<span class="normal"><a href="#__codelineno-34-25">25</a></span>
+<span class="normal"><a href="#__codelineno-34-26">26</a></span>
+<span class="normal"><a href="#__codelineno-34-27">27</a></span>
+<span class="normal"><a href="#__codelineno-34-28">28</a></span>
+<span class="normal"><a href="#__codelineno-34-29">29</a></span>
+<span class="normal"><a href="#__codelineno-34-30">30</a></span>
+<span class="normal"><a href="#__codelineno-34-31">31</a></span>
+<span class="normal"><a href="#__codelineno-34-32">32</a></span>
+<span class="normal"><a href="#__codelineno-34-33">33</a></span>
+<span class="normal"><a href="#__codelineno-34-34">34</a></span>
+<span class="normal"><a href="#__codelineno-34-35">35</a></span>
+<span class="normal"><a href="#__codelineno-34-36">36</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span><span class="w"></span>
+<a id="__codelineno-34-2" name="__codelineno-34-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span><span class="w"></span>
+<a id="__codelineno-34-3" name="__codelineno-34-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-4" name="__codelineno-34-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-5" name="__codelineno-34-5"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-6" name="__codelineno-34-6"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-7" name="__codelineno-34-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-8" name="__codelineno-34-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<a id="__codelineno-34-9" name="__codelineno-34-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-10" name="__codelineno-34-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-11" name="__codelineno-34-11"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-12" name="__codelineno-34-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-13" name="__codelineno-34-13"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-14" name="__codelineno-34-14"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-15" name="__codelineno-34-15"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-16" name="__codelineno-34-16"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-17" name="__codelineno-34-17"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-18" name="__codelineno-34-18"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/tetratelabs/hello-world:1.0.0</span><span class="w"></span>
+<a id="__codelineno-34-19" name="__codelineno-34-19"></a><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span><span class="w"></span>
+<a id="__codelineno-34-20" name="__codelineno-34-20"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc</span><span class="w"></span>
+<a id="__codelineno-34-21" name="__codelineno-34-21"></a><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-22" name="__codelineno-34-22"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
+<a id="__codelineno-34-23" name="__codelineno-34-23"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-34-24" name="__codelineno-34-24"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
+<a id="__codelineno-34-25" name="__codelineno-34-25"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-34-26" name="__codelineno-34-26"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-27" name="__codelineno-34-27"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-28" name="__codelineno-34-28"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-29" name="__codelineno-34-29"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-30" name="__codelineno-34-30"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-31" name="__codelineno-34-31"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-32" name="__codelineno-34-32"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-33" name="__codelineno-34-33"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-34" name="__codelineno-34-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
+<a id="__codelineno-34-35" name="__codelineno-34-35"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
+<a id="__codelineno-34-36" name="__codelineno-34-36"></a><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
 </details>
-<p>Save the above YAML to <code>hello-world.yaml</code> and deploy it using <code>kubectl apply -f hello-world.yaml</code>.</p>
-<p>Wait for the Pods to become ready and then go back to the virtual machine and try to access the Kubernetes service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl http://hello-world.default
+<p>Save the above YAML to <code>hello-world.yaml</code> and deploy it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>kubectl apply -f hello-world.yaml
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="go">Hello World</span>
+<p>Wait for the Pods to become ready and then go back to the virtual machine and try to access the Kubernetes service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl http://hello-world.default
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="go">Hello World</span>
 </code></pre></div>
 <p>You can access any service running within your Kubernetes cluster from the virtual machine.</p>
 <h2 id="run-services-on-the-virtual-machine">Run services on the virtual machine<a class="headerlink" href="#run-services-on-the-virtual-machine" title="Permanent link">&para;</a></h2>
 <p>We can also run a workload on the virtual machine. Switch to the virtual machine instance and run a simple Python HTTP server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>sudo python3 -m http.server <span class="m">80</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>sudo python3 -m http.server <span class="m">80</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="go">Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="go">Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
 </code></pre></div>
 <p>What we want to do next is add the workload (Python HTTP service) to the mesh. For that reason, we created the VM namespace earlier. So let's create a Kubernetes service that represents the VM workload. Note that the name and the label values equal to the value of the <code>VM_APP</code> environment variable we set earlier. Don't forget to deploy the service to the <code>VM_NAMESPACE</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
-<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
-<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vm-namespace</span><span class="w"></span>
-<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
-<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http-vm</span><span class="w"></span>
-<a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">hello-vm-service.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-40-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-40-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-40-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-40-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-40-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-40-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-40-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-40-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-40-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-40-10">10</a></span>
+<span class="normal"><a href="#__codelineno-40-11">11</a></span>
+<span class="normal"><a href="#__codelineno-40-12">12</a></span>
+<span class="normal"><a href="#__codelineno-40-13">13</a></span>
+<span class="normal"><a href="#__codelineno-40-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-40-2" name="__codelineno-40-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
+<a id="__codelineno-40-3" name="__codelineno-40-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-40-4" name="__codelineno-40-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
+<a id="__codelineno-40-5" name="__codelineno-40-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vm-namespace</span><span class="w"></span>
+<a id="__codelineno-40-6" name="__codelineno-40-6"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-40-7" name="__codelineno-40-7"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
+<a id="__codelineno-40-8" name="__codelineno-40-8"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-40-9" name="__codelineno-40-9"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-40-10" name="__codelineno-40-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
+<a id="__codelineno-40-11" name="__codelineno-40-11"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http-vm</span><span class="w"></span>
+<a id="__codelineno-40-12" name="__codelineno-40-12"></a><span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
+<a id="__codelineno-40-13" name="__codelineno-40-13"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-40-14" name="__codelineno-40-14"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-vm</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>Save the above YAML to <code>hello-vm-service.yaml</code> and deploy it to the VM namespace:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>kubectl apply -f hello-vm-service.yaml
 </code></pre></div>
-<p>Save the above YAML to <code>hello-vm-service.yaml</code> and deploy it to the VM namespace using with <code>kubectl apply -f hello-vm-service.yaml</code>.</p>
 <p>We can now use the Kubernetes service name <code>hello-vm.vm-namespace</code> to access the workload running on the virtual machine (the Python server). Let's run a Pod inside the cluster and try to access the service from there:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>kubectl run curl --image<span class="o">=</span>radial/busyboxplus:curl -i --tty --rm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>kubectl run curl --image<span class="o">=</span>radial/busyboxplus:curl -i --tty --rm
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="go">If you don&#39;t see a command prompt, try pressing enter.</span>
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="gp">[ root@curl:/ ]$</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="go">If you don&#39;t see a command prompt, try pressing enter.</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="gp">[ root@curl:/ ]$</span>
 </code></pre></div>
 <p>After you get the command prompt in the Pod, you can run curl and access the workload. You should see a directory listing response. Similarly, you will notice a log entry on the instance where the HTTP server is running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="o">[</span> root@curl:/ <span class="o">]</span>$ curl hello-vm.vm-namespace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="o">[</span> root@curl:/ <span class="o">]</span>$ curl hello-vm.vm-namespace
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="go">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dt</span>
-<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="go">d&quot;&gt;</span>
-<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="go">&lt;html&gt;</span>
-<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="go">&lt;head&gt;</span>
-<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="go">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span>
-<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="go">&lt;title&gt;Directory listing for /&lt;/title&gt;</span>
-<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="go">&lt;/head&gt;</span>
-<a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="go">&lt;body&gt;</span>
-<a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a><span class="go">&lt;h1&gt;Directory listing for /&lt;/h1&gt;</span>
-<a id="__codelineno-42-10" name="__codelineno-42-10" href="#__codelineno-42-10"></a><span class="go">&lt;hr&gt;</span>
-<a id="__codelineno-42-11" name="__codelineno-42-11" href="#__codelineno-42-11"></a><span class="go">...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="go">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dt</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="go">d&quot;&gt;</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="go">&lt;html&gt;</span>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="go">&lt;head&gt;</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="go">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span>
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="go">&lt;title&gt;Directory listing for /&lt;/title&gt;</span>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="go">&lt;/head&gt;</span>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a><span class="go">&lt;body&gt;</span>
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="go">&lt;h1&gt;Directory listing for /&lt;/h1&gt;</span>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="go">&lt;hr&gt;</span>
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="go">...</span>
 </code></pre></div>
 
 
