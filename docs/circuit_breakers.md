@@ -221,10 +221,11 @@ spec:
 
 With these settings (assuming 2 concurrent connections), we can easily handle a higher number of requests. Note that the numbers we used in settings are just examples and are not realistic - we set them intentionally low to make the circuit breaker easier to trip.
 
-Before continuing, delete the DestinationRule:
+Before continuing, delete the DestinationRule and reset the metric counters:
 
 ```shell
 kubectl delete dr --all
+kubectl exec $FORTIO_POD -c istio-proxy -- curl -X POST localhost:15000/reset_counters
 ```
 
 ## Outlier detection
