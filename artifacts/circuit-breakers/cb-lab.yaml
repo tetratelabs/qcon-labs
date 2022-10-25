@@ -15,16 +15,6 @@ spec:
     matchLabels:
       app: web-frontend
   template:
-    metadata:
-      annotations:
-        proxy.istio.io/config: |-
-          proxyStatsMatcher:
-            inclusionPrefixes:
-            - "cluster.outbound"
-            - "cluster_manager"
-            - "listener_manager"
-            - "server"
-            - "cluster.xds-grpc"
       labels:
         app: web-frontend
         version: v1
