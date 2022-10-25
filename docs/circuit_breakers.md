@@ -22,18 +22,14 @@ istioctl install -f istio-metrics.yaml
 
 ## Deploying the sample application
 
-We'll deploy the `web-frontend` and `customers-v1` workloads with corresponding VirtualServices and the Gateway resource. Make sure you've labeled the default namespace with `istio-injection=enabled` so that the workloads are injected with the Istio sidecar.
+The `web-frontend` and `customers-v1` workloads should already be running.
+If not, you can apply the below manifest to redeploy them:
 
 ??? note "Click for cb-lab.yaml"
 
     ```yaml linenums="1" title="cb-lab.yaml"
     --8<-- "circuit-breakers/cb-lab.yaml"
     ```
-Save the above file to `cb-lab.yaml` and deploy the resources using:
-
-```shell
-kubectl apply -f cb-lab.yaml
-```
 
 ## Circuit breaker - connection pool settings
 
