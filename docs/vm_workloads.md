@@ -331,21 +331,8 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 What we want to do next is add the workload (Python HTTP service) to the mesh. For that reason, we created the VM namespace earlier. So let's create a Kubernetes service that represents the VM workload. Note that the name and the label values equal to the value of the `VM_APP` environment variable we set earlier. Don't forget to deploy the service to the `VM_NAMESPACE`.
 
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-vm
-  namespace: vm-namespace
-  labels:
-    app: hello-vm
-spec:
-  ports:
-  - port: 80
-    name: http-vm
-    targetPort: 80
-  selector:
-    app: hello-vm
+```yaml linenums="1" title="hello-vm-service.yaml"
+--8<-- "vm-workloads/hello-vm-service.yaml"
 ```
 
 Save the above YAML to `hello-vm-service.yaml` and deploy it to the VM namespace using with `kubectl apply -f hello-vm-service.yaml`.
