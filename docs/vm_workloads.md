@@ -173,6 +173,18 @@ The expiration time on the initial `istio-token` is 1 hour. If it takes you long
 Once the VM obtains the mTLS certificate, it can use it to prove its identity. The certificate is valid for 24 hours and the proxy will automatically refresh it before it expires.
 
 
+## Set default compute region and zone
+
+Configuring the default and region and zone helps avoid specifying them in subsequent commands:
+
+```shell
+gcloud config set compute/region us-west1
+```
+
+```shell
+gcloud config set compute/zone us-west1-a
+```
+
 ## Create the Virtual Machine
 
 We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
@@ -205,10 +217,10 @@ We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
 
 Now it's time to configure the Virtual machine. In this example, we run a simple Python HTTP server on port 80. You could configure any other service on a different port. Just make sure you configure the security and firewall rules accordingly.
 
-1. Copy the files from `vm-files` folder to the home folder on the instance. Replace `INSTANCE_ZONE` accordingly.
+1. Copy the files from `vm-files` folder to the home folder on the instance.
 
     ```shell
-    gcloud compute scp vm-files/* my-mesh-vm:~ --zone=[INSTANCE_ZONE]
+    gcloud compute scp vm-files/* my-mesh-vm:~
     ```
 
     ```console
@@ -222,7 +234,7 @@ Now it's time to configure the Virtual machine. In this example, we run a simple
 1. SSH into the instance and copy the root certificate to `/etc/certs` (you can use the command from the instance details page in the SSH dropdown):
 
     ```shell
-    gcloud beta compute ssh --zone=[INSTANCE_ZONE] my-mesh-vm
+    gcloud compute ssh my-mesh-vm
     ```
 
     ```shell
