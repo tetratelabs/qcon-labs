@@ -239,7 +239,11 @@ To see the outlier detection in action we need a service that is failing. We'll 
     --8<-- "circuit-breakers/web-frontend-failing.yaml"
     ```
 
-Save the above YAML to `web-frontend-failing.yaml` and apply it to the cluster with `kubectl apply -f web-frontend-failing.yaml`.
+Save the above YAML to `web-frontend-failing.yaml` and apply it to the cluster:
+
+```shell
+kubectl apply -f web-frontend-failing.yaml
+```
 
 If we run Fortio we'll see that majority of the requests will be failing. That's because the `web-frontend-failing` deployment has more replicas than the "good" deployment.
 
@@ -255,19 +259,8 @@ Code 500 : 41 (82.0 %)
 
 Let's look at an example of outlier detection configuration:
 
-```yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: web-frontend
-spec:
-  host: web-frontend.default.svc.cluster.local
-  trafficPolicy:
-    outlierDetection:
-      consecutive5xxErrors: 1 # (1)
-      interval: 5s # (2)
-      baseEjectionTime: 60s # (3)
-      maxEjectionPercent: 100 # (4)
+```yaml linenums="1" title="outlier-web-frontend.yaml"
+--8<-- "circuit-breakers/outlier-web-frontend.yaml"
 ```
 
 1. Number of 5xx errors in a row that will trigger the outlier detection. 

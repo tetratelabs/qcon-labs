@@ -1,7 +1,7 @@
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 spec:
-  profile: default
+  profile: demo
   meshConfig:
     defaultConfig:
       proxyStatsMatcher:
