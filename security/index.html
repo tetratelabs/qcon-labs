@@ -13,7 +13,7 @@
     
     
       
-        <title>Security - Access control - QCon 2022 - Istio Workshop</title>
+        <title>Security - QCon 2022 - Istio Workshop</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#security-access-control" class="md-skip">
+        <a href="#security" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Security - Access control
+              Security
             
           </span>
         </div>
@@ -230,32 +230,6 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_1">
-          Morning session
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Morning session" data-md-level="1">
-        <label class="md-nav__title" for="__nav_1">
-          <span class="md-nav__icon md-icon"></span>
-          Morning session
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
       <a href="../environment/" class="md-nav__link">
         Lab environment
@@ -263,10 +237,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -277,10 +252,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -291,10 +267,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -305,10 +282,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -319,10 +297,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -333,10 +312,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -347,74 +327,11 @@
     </li>
   
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../traffic-shifting/" class="md-nav__link">
-        Traffic shifting
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
     
       
       
       
 
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2">
-          Afternoon session
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Afternoon session" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
-          <span class="md-nav__icon md-icon"></span>
-          Afternoon session
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../circuit_breakers/" class="md-nav__link">
-        Circuit breakers
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
   
   
     
@@ -429,12 +346,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Security - Access control
+          Security
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Security - Access control
+        Security
       </a>
       
         
@@ -453,43 +370,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites-and-setup" class="md-nav__link">
-    Prerequisites and setup
+  <a href="#mutual-tls" class="md-nav__link">
+    Mutual TLS
   </a>
+  
+    <nav class="md-nav" aria-label="Mutual TLS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#can-a-workload-receive-plain-text-requests" class="md-nav__link">
+    Can a workload receive plain-text requests?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-strict-mode" class="md-nav__link">
+    Enable strict mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-that-plain-text-requests-are-no-longer-permitted" class="md-nav__link">
+    Verify that plain-text requests are no longer permitted
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#denying-all-requests-between-services" class="md-nav__link">
-    Denying all requests between services
+  <a href="#security-in-depth" class="md-nav__link">
+    Security in depth
   </a>
+  
+    <nav class="md-nav" aria-label="Security in depth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenge" class="md-nav__link">
+    Challenge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-it" class="md-nav__link">
+    Test it
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#allow-requests-from-ingress-to-web-frontend" class="md-nav__link">
-    Allow requests from ingress to web-frontend
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#allow-requests-from-web-frontend-to-customers" class="md-nav__link">
-    Allow requests from web-frontend to customers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    Conclusion
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#next" class="md-nav__link">
+    Next
   </a>
   
 </li>
@@ -501,10 +444,41 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../traffic-shifting/" class="md-nav__link">
+        Traffic shifting
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../circuit_breakers/" class="md-nav__link">
+        Circuit breakers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -512,13 +486,6 @@
       <a href="../vm_workloads/" class="md-nav__link">
         VM workloads
       </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -565,43 +532,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites-and-setup" class="md-nav__link">
-    Prerequisites and setup
+  <a href="#mutual-tls" class="md-nav__link">
+    Mutual TLS
   </a>
+  
+    <nav class="md-nav" aria-label="Mutual TLS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#can-a-workload-receive-plain-text-requests" class="md-nav__link">
+    Can a workload receive plain-text requests?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-strict-mode" class="md-nav__link">
+    Enable strict mode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-that-plain-text-requests-are-no-longer-permitted" class="md-nav__link">
+    Verify that plain-text requests are no longer permitted
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#denying-all-requests-between-services" class="md-nav__link">
-    Denying all requests between services
+  <a href="#security-in-depth" class="md-nav__link">
+    Security in depth
   </a>
+  
+    <nav class="md-nav" aria-label="Security in depth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenge" class="md-nav__link">
+    Challenge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-it" class="md-nav__link">
+    Test it
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#allow-requests-from-ingress-to-web-frontend" class="md-nav__link">
-    Allow requests from ingress to web-frontend
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#allow-requests-from-web-frontend-to-customers" class="md-nav__link">
-    Allow requests from web-frontend to customers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    Conclusion
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    Cleanup
+  <a href="#next" class="md-nav__link">
+    Next
   </a>
   
 </li>
@@ -626,457 +619,179 @@
   </a>
 
 
-<h1 id="security-access-control">Security - Access control<a class="headerlink" href="#security-access-control" title="Permanent link">&para;</a></h1>
-<p>In this lab, we will learn how to use an authorization policy to control access between workloads.</p>
-<h2 id="prerequisites-and-setup">Prerequisites and setup<a class="headerlink" href="#prerequisites-and-setup" title="Permanent link">&para;</a></h2>
-<p>Configure the ingress gateway to accept requests on port 80, for any host name:</p>
-<details class="note">
-<summary>Click for gateway-all.yaml</summary>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">gateway-all.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span>
-<span class="normal"><a href="#__codelineno-0-12">12</a></span>
-<span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gateway</span><span class="w"></span>
-<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway</span><span class="w"></span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">    </span><span class="nt">istio</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingressgateway</span><span class="w"></span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">  </span><span class="nt">servers</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">        </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">        </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTP</span><span class="w"></span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*&#39;</span><span class="w"></span>
-</code></pre></div></td></tr></table></div>
-</details>
-<p>Save the above YAML to <code>gateway-all.yaml</code> and deploy the Gateway using <code>kubectl apply -f gateway-all.yaml</code>.</p>
-<p>Next, create the Web frontend deployment, service account, service, and a VirtualService.</p>
-<details class="note">
-<summary>Click for web-frontend.yaml</summary>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">web-frontend.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-1-10">10</a></span>
-<span class="normal"><a href="#__codelineno-1-11">11</a></span>
-<span class="normal"><a href="#__codelineno-1-12">12</a></span>
-<span class="normal"><a href="#__codelineno-1-13">13</a></span>
-<span class="normal"><a href="#__codelineno-1-14">14</a></span>
-<span class="normal"><a href="#__codelineno-1-15">15</a></span>
-<span class="normal"><a href="#__codelineno-1-16">16</a></span>
-<span class="normal"><a href="#__codelineno-1-17">17</a></span>
-<span class="normal"><a href="#__codelineno-1-18">18</a></span>
-<span class="normal"><a href="#__codelineno-1-19">19</a></span>
-<span class="normal"><a href="#__codelineno-1-20">20</a></span>
-<span class="normal"><a href="#__codelineno-1-21">21</a></span>
-<span class="normal"><a href="#__codelineno-1-22">22</a></span>
-<span class="normal"><a href="#__codelineno-1-23">23</a></span>
-<span class="normal"><a href="#__codelineno-1-24">24</a></span>
-<span class="normal"><a href="#__codelineno-1-25">25</a></span>
-<span class="normal"><a href="#__codelineno-1-26">26</a></span>
-<span class="normal"><a href="#__codelineno-1-27">27</a></span>
-<span class="normal"><a href="#__codelineno-1-28">28</a></span>
-<span class="normal"><a href="#__codelineno-1-29">29</a></span>
-<span class="normal"><a href="#__codelineno-1-30">30</a></span>
-<span class="normal"><a href="#__codelineno-1-31">31</a></span>
-<span class="normal"><a href="#__codelineno-1-32">32</a></span>
-<span class="normal"><a href="#__codelineno-1-33">33</a></span>
-<span class="normal"><a href="#__codelineno-1-34">34</a></span>
-<span class="normal"><a href="#__codelineno-1-35">35</a></span>
-<span class="normal"><a href="#__codelineno-1-36">36</a></span>
-<span class="normal"><a href="#__codelineno-1-37">37</a></span>
-<span class="normal"><a href="#__codelineno-1-38">38</a></span>
-<span class="normal"><a href="#__codelineno-1-39">39</a></span>
-<span class="normal"><a href="#__codelineno-1-40">40</a></span>
-<span class="normal"><a href="#__codelineno-1-41">41</a></span>
-<span class="normal"><a href="#__codelineno-1-42">42</a></span>
-<span class="normal"><a href="#__codelineno-1-43">43</a></span>
-<span class="normal"><a href="#__codelineno-1-44">44</a></span>
-<span class="normal"><a href="#__codelineno-1-45">45</a></span>
-<span class="normal"><a href="#__codelineno-1-46">46</a></span>
-<span class="normal"><a href="#__codelineno-1-47">47</a></span>
-<span class="normal"><a href="#__codelineno-1-48">48</a></span>
-<span class="normal"><a href="#__codelineno-1-49">49</a></span>
-<span class="normal"><a href="#__codelineno-1-50">50</a></span>
-<span class="normal"><a href="#__codelineno-1-51">51</a></span>
-<span class="normal"><a href="#__codelineno-1-52">52</a></span>
-<span class="normal"><a href="#__codelineno-1-53">53</a></span>
-<span class="normal"><a href="#__codelineno-1-54">54</a></span>
-<span class="normal"><a href="#__codelineno-1-55">55</a></span>
-<span class="normal"><a href="#__codelineno-1-56">56</a></span>
-<span class="normal"><a href="#__codelineno-1-57">57</a></span>
-<span class="normal"><a href="#__codelineno-1-58">58</a></span>
-<span class="normal"><a href="#__codelineno-1-59">59</a></span>
-<span class="normal"><a href="#__codelineno-1-60">60</a></span>
-<span class="normal"><a href="#__codelineno-1-61">61</a></span>
-<span class="normal"><a href="#__codelineno-1-62">62</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span><span class="w"></span>
-<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span><span class="w"></span>
-<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span><span class="w"></span>
-<a id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-24" name="__codelineno-1-24"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/tetratelabs/web-frontend:1.0.0</span><span class="w"></span>
-<a id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span><span class="w"></span>
-<a id="__codelineno-1-27" name="__codelineno-1-27"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web</span><span class="w"></span>
-<a id="__codelineno-1-28" name="__codelineno-1-28"></a><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-29" name="__codelineno-1-29"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span><span class="w"></span>
-<a id="__codelineno-1-30" name="__codelineno-1-30"></a><span class="w">          </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-31" name="__codelineno-1-31"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CUSTOMER_SERVICE_URL</span><span class="w"></span>
-<a id="__codelineno-1-32" name="__codelineno-1-32"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://customers.default.svc.cluster.local&quot;</span><span class="w"></span>
-<a id="__codelineno-1-33" name="__codelineno-1-33"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-1-34" name="__codelineno-1-34"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
-<a id="__codelineno-1-35" name="__codelineno-1-35"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-1-36" name="__codelineno-1-36"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-37" name="__codelineno-1-37"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-38" name="__codelineno-1-38"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-39" name="__codelineno-1-39"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-40" name="__codelineno-1-40"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-41" name="__codelineno-1-41"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-42" name="__codelineno-1-42"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-43" name="__codelineno-1-43"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-44" name="__codelineno-1-44"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-1-45" name="__codelineno-1-45"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
-<a id="__codelineno-1-46" name="__codelineno-1-46"></a><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span><span class="w"></span>
-<a id="__codelineno-1-47" name="__codelineno-1-47"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-1-48" name="__codelineno-1-48"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-1-49" name="__codelineno-1-49"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VirtualService</span><span class="w"></span>
-<a id="__codelineno-1-50" name="__codelineno-1-50"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-51" name="__codelineno-1-51"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-1-52" name="__codelineno-1-52"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-53" name="__codelineno-1-53"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-54" name="__codelineno-1-54"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="w"></span>
-<a id="__codelineno-1-55" name="__codelineno-1-55"></a><span class="w">  </span><span class="nt">gateways</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-56" name="__codelineno-1-56"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway</span><span class="w"></span>
-<a id="__codelineno-1-57" name="__codelineno-1-57"></a><span class="w">  </span><span class="nt">http</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-58" name="__codelineno-1-58"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-59" name="__codelineno-1-59"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-60" name="__codelineno-1-60"></a><span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend.default.svc.cluster.local</span><span class="w"></span>
-<a id="__codelineno-1-61" name="__codelineno-1-61"></a><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-1-62" name="__codelineno-1-62"></a><span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-</code></pre></div></td></tr></table></div>
-</details>
-<p>Save the above YAML to <code>web-frontend.yaml</code> and create the resource using <code>kubectl apply -f web-frontend.yaml</code>.</p>
-<p>Finally, deploy the <code>customers</code> service.</p>
-<details class="note">
-<summary>Click for customers.yaml</summary>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">customers.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-2-10">10</a></span>
-<span class="normal"><a href="#__codelineno-2-11">11</a></span>
-<span class="normal"><a href="#__codelineno-2-12">12</a></span>
-<span class="normal"><a href="#__codelineno-2-13">13</a></span>
-<span class="normal"><a href="#__codelineno-2-14">14</a></span>
-<span class="normal"><a href="#__codelineno-2-15">15</a></span>
-<span class="normal"><a href="#__codelineno-2-16">16</a></span>
-<span class="normal"><a href="#__codelineno-2-17">17</a></span>
-<span class="normal"><a href="#__codelineno-2-18">18</a></span>
-<span class="normal"><a href="#__codelineno-2-19">19</a></span>
-<span class="normal"><a href="#__codelineno-2-20">20</a></span>
-<span class="normal"><a href="#__codelineno-2-21">21</a></span>
-<span class="normal"><a href="#__codelineno-2-22">22</a></span>
-<span class="normal"><a href="#__codelineno-2-23">23</a></span>
-<span class="normal"><a href="#__codelineno-2-24">24</a></span>
-<span class="normal"><a href="#__codelineno-2-25">25</a></span>
-<span class="normal"><a href="#__codelineno-2-26">26</a></span>
-<span class="normal"><a href="#__codelineno-2-27">27</a></span>
-<span class="normal"><a href="#__codelineno-2-28">28</a></span>
-<span class="normal"><a href="#__codelineno-2-29">29</a></span>
-<span class="normal"><a href="#__codelineno-2-30">30</a></span>
-<span class="normal"><a href="#__codelineno-2-31">31</a></span>
-<span class="normal"><a href="#__codelineno-2-32">32</a></span>
-<span class="normal"><a href="#__codelineno-2-33">33</a></span>
-<span class="normal"><a href="#__codelineno-2-34">34</a></span>
-<span class="normal"><a href="#__codelineno-2-35">35</a></span>
-<span class="normal"><a href="#__codelineno-2-36">36</a></span>
-<span class="normal"><a href="#__codelineno-2-37">37</a></span>
-<span class="normal"><a href="#__codelineno-2-38">38</a></span>
-<span class="normal"><a href="#__codelineno-2-39">39</a></span>
-<span class="normal"><a href="#__codelineno-2-40">40</a></span>
-<span class="normal"><a href="#__codelineno-2-41">41</a></span>
-<span class="normal"><a href="#__codelineno-2-42">42</a></span>
-<span class="normal"><a href="#__codelineno-2-43">43</a></span>
-<span class="normal"><a href="#__codelineno-2-44">44</a></span>
-<span class="normal"><a href="#__codelineno-2-45">45</a></span>
-<span class="normal"><a href="#__codelineno-2-46">46</a></span>
-<span class="normal"><a href="#__codelineno-2-47">47</a></span>
-<span class="normal"><a href="#__codelineno-2-48">48</a></span>
-<span class="normal"><a href="#__codelineno-2-49">49</a></span>
-<span class="normal"><a href="#__codelineno-2-50">50</a></span>
-<span class="normal"><a href="#__codelineno-2-51">51</a></span>
-<span class="normal"><a href="#__codelineno-2-52">52</a></span>
-<span class="normal"><a href="#__codelineno-2-53">53</a></span>
-<span class="normal"><a href="#__codelineno-2-54">54</a></span>
-<span class="normal"><a href="#__codelineno-2-55">55</a></span>
-<span class="normal"><a href="#__codelineno-2-56">56</a></span>
-<span class="normal"><a href="#__codelineno-2-57">57</a></span>
-<span class="normal"><a href="#__codelineno-2-58">58</a></span>
-<span class="normal"><a href="#__codelineno-2-59">59</a></span>
-<span class="normal"><a href="#__codelineno-2-60">60</a></span>
-<span class="normal"><a href="#__codelineno-2-61">61</a></span>
-<span class="normal"><a href="#__codelineno-2-62">62</a></span>
-<span class="normal"><a href="#__codelineno-2-63">63</a></span>
-<span class="normal"><a href="#__codelineno-2-64">64</a></span>
-<span class="normal"><a href="#__codelineno-2-65">65</a></span>
-<span class="normal"><a href="#__codelineno-2-66">66</a></span>
-<span class="normal"><a href="#__codelineno-2-67">67</a></span>
-<span class="normal"><a href="#__codelineno-2-68">68</a></span>
-<span class="normal"><a href="#__codelineno-2-69">69</a></span>
-<span class="normal"><a href="#__codelineno-2-70">70</a></span>
-<span class="normal"><a href="#__codelineno-2-71">71</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span><span class="w"></span>
-<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers-v1</span><span class="w"></span>
-<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span><span class="w"></span>
-<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span><span class="w"></span>
-<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers-v1</span><span class="w"></span>
-<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers-v1</span><span class="w"></span>
-<a id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/tetratelabs/customers:1.0.0</span><span class="w"></span>
-<a id="__codelineno-2-28" name="__codelineno-2-28"></a><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span><span class="w"></span>
-<a id="__codelineno-2-29" name="__codelineno-2-29"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc</span><span class="w"></span>
-<a id="__codelineno-2-30" name="__codelineno-2-30"></a><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
-<a id="__codelineno-2-32" name="__codelineno-2-32"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-2-33" name="__codelineno-2-33"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
-<a id="__codelineno-2-34" name="__codelineno-2-34"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-35" name="__codelineno-2-35"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-36" name="__codelineno-2-36"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-37" name="__codelineno-2-37"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-38" name="__codelineno-2-38"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-39" name="__codelineno-2-39"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-40" name="__codelineno-2-40"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-41" name="__codelineno-2-41"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-42" name="__codelineno-2-42"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-43" name="__codelineno-2-43"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-2-44" name="__codelineno-2-44"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
-<a id="__codelineno-2-45" name="__codelineno-2-45"></a><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
-<a id="__codelineno-2-46" name="__codelineno-2-46"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-2-47" name="__codelineno-2-47"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-2-48" name="__codelineno-2-48"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
-<a id="__codelineno-2-49" name="__codelineno-2-49"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-50" name="__codelineno-2-50"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-51" name="__codelineno-2-51"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-52" name="__codelineno-2-52"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers.default.svc.cluster.local</span><span class="w"></span>
-<a id="__codelineno-2-53" name="__codelineno-2-53"></a><span class="w">  </span><span class="nt">subsets</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-54" name="__codelineno-2-54"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-55" name="__codelineno-2-55"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-56" name="__codelineno-2-56"></a><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-2-57" name="__codelineno-2-57"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-2-58" name="__codelineno-2-58"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-2-59" name="__codelineno-2-59"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VirtualService</span><span class="w"></span>
-<a id="__codelineno-2-60" name="__codelineno-2-60"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-61" name="__codelineno-2-61"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-2-62" name="__codelineno-2-62"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-63" name="__codelineno-2-63"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-64" name="__codelineno-2-64"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;customers.default.svc.cluster.local&quot;</span><span class="w"></span>
-<a id="__codelineno-2-65" name="__codelineno-2-65"></a><span class="w">  </span><span class="nt">http</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-66" name="__codelineno-2-66"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-67" name="__codelineno-2-67"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-68" name="__codelineno-2-68"></a><span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers.default.svc.cluster.local</span><span class="w"></span>
-<a id="__codelineno-2-69" name="__codelineno-2-69"></a><span class="w">            </span><span class="nt">port</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-2-70" name="__codelineno-2-70"></a><span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
-<a id="__codelineno-2-71" name="__codelineno-2-71"></a><span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-</code></pre></div></td></tr></table></div>
-</details>
-<p>Save the above YAML to <code>customers.yaml</code> and create the resources with <code>kubectl apply -f customers.yaml</code>.</p>
-<p>Set the <code>GATEWAY_IP</code> variable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span> <span class="nv">GATEWAY_IP</span><span class="o">=</span><span class="k">$(</span>kubectl get svc istio-ingressgateway -n istio-system -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
+<h1 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h1>
+<p>In this lab we explore some of the security features of the Istio service mesh.</p>
+<h2 id="mutual-tls">Mutual TLS<a class="headerlink" href="#mutual-tls" title="Permanent link">&para;</a></h2>
+<p>By default, Istio is configured such that when a service is deployed onto the mesh, it will take advantage of mutual TLS:</p>
+<ul>
+<li>the service is given an identity as a function of its associated service account and namespace</li>
+<li>an x.509 certificate is issued to the workload (and regularly rotated) and used to identify the workload in calls to other services</li>
+</ul>
+<p>In the <a href="../dashboards/#kiali">observability</a> lab, we looked at the Kiali dashboard and noted the lock icons indicating that traffic was secured with mTLS.</p>
+<h3 id="can-a-workload-receive-plain-text-requests">Can a workload receive plain-text requests?<a class="headerlink" href="#can-a-workload-receive-plain-text-requests" title="Permanent link">&para;</a></h3>
+<p>We can test whether a mesh workload, such as the customers service, will allow a plain-text request as follows:</p>
+<ol>
+<li>
+<p>Create a separate namespace that is not configured with automatic injection.</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl create ns otherns
 </code></pre></div>
-<p>Make an HTTP request to the <code>GATEWAY_IP</code> and confirm that the resulting web frontend page displays the data from the <code>customers</code> service.</p>
-<h2 id="denying-all-requests-between-services">Denying all requests between services<a class="headerlink" href="#denying-all-requests-between-services" title="Permanent link">&para;</a></h2>
-<p>Create an authorization policy that denies all requests in the default namespace.</p>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">deny-all.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+</li>
+<li>
+<p>Deploy <code>sleep</code> to that namespace</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl apply -f sleep.yaml -n otherns
+</code></pre></div>
+</li>
+<li>
+<p>Verify that the sleep pod has no sidecars:</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl get pod -n otherns
+</code></pre></div>
+</li>
+<li>
+<p>Call the customer service from that pod:</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -n otherns -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl <span class="nb">exec</span> -n otherns <span class="nv">$SLEEP_POD</span> -- curl -s customers.default
+</code></pre></div>
+</li>
+</ol>
+<p>The output should look like a list of customers in JSON format.</p>
+<p>We conclude that Istio is configured by default to allow plain-text request.
+This is called <em>permissive mode</em> and is specifically designed to allow services that have not yet fully onboarded onto the mesh to participate.</p>
+<div class="admonition question">
+<p class="admonition-title">Challenge</p>
+<p>Above, you were asked to create a namespace without marking it for sidecar injection in order to effectively have a client that can call other services without employing mutual TLS.</p>
+<p>Can you find another way of achieving the same result?  Can a client be configured explicitly to not use mTLS?</p>
+</div>
+<h3 id="enable-strict-mode">Enable strict mode<a class="headerlink" href="#enable-strict-mode" title="Permanent link">&para;</a></h3>
+<p>Istio provides the <code>PeerAuthentication</code> custom resource to define peer authentication policy.</p>
+<ol>
+<li>
+<p>Apply the following peer authentication policy.</p>
+<details class="tldr">
+<summary>mtls-strict.yaml</summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
 <span class="normal"><a href="#__codelineno-4-2">2</a></span>
 <span class="normal"><a href="#__codelineno-4-3">3</a></span>
 <span class="normal"><a href="#__codelineno-4-4">4</a></span>
 <span class="normal"><a href="#__codelineno-4-5">5</a></span>
-<span class="normal"><a href="#__codelineno-4-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span><span class="w"></span>
-<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span><span class="w"></span>
-<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deny-all</span><span class="w"></span>
-<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
-<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w"></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span>
+<span class="normal"><a href="#__codelineno-4-7">7</a></span>
+<span class="normal"><a href="#__codelineno-4-8">8</a></span>
+<span class="normal"><a href="#__codelineno-4-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span><span class="w"></span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PeerAuthentication</span><span class="w"></span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">  </span><span class="nt">mtls</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STRICT</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<p>Save the above YAML to <code>deny-all.yaml</code> and create the policy using <code>kubectl apply -f deny-all.yaml</code>.</p>
-<p>Attempt to access <code>GATEWAY_IP</code>, and confirm the following response:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="go">RBAC: access denied</span>
+</details>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Strict mtls can be enabled globally by setting the namespace to the name of the Istio root namespace, which by default is <code>istio-system</code></p>
+</div>
+</li>
+<li>
+<p>Verify that the peer authentication has been applied.</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl get peerauthentication
 </code></pre></div>
-<p>Similarly, from a Pod running inside the cluster, a request from within the default namespace to either the web frontend or the customer service should result in the same error:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl run curl --image<span class="o">=</span>radial/busyboxplus:curl -i --tty --rm
+</li>
+</ol>
+<h3 id="verify-that-plain-text-requests-are-no-longer-permitted">Verify that plain-text requests are no longer permitted<a class="headerlink" href="#verify-that-plain-text-requests-are-no-longer-permitted" title="Permanent link">&para;</a></h3>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl <span class="nb">exec</span> -n otherns <span class="nv">$SLEEP_POD</span> -- curl customers.default
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="o">[</span> root@curl:/ <span class="o">]</span>$ curl customers
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>RBAC: access denied
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="o">[</span> root@curl:/ <span class="o">]</span>$ curl web-frontend
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>RBAC: access denied
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="o">[</span> root@curl:/ <span class="o">]</span>$
+<p>The console output should indicate that the <em>connection was reset by peer</em>.</p>
+<h2 id="security-in-depth">Security in depth<a class="headerlink" href="#security-in-depth" title="Permanent link">&para;</a></h2>
+<p>Another important layer of security is to define an authorization policy, in which we allow only specific services to communicate with other services.</p>
+<p>At the moment, any container can, for example, call the customers service or the web-frontend service.</p>
+<ol>
+<li>
+<p>Capture the name of the sleep pod running in the default namespace</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
 </code></pre></div>
-<p>In both cases, access is denied. To exit the curl pod, type <code>exit</code>.</p>
-<h2 id="allow-requests-from-ingress-to-web-frontend">Allow requests from ingress to <code>web-frontend</code><a class="headerlink" href="#allow-requests-from-ingress-to-web-frontend" title="Permanent link">&para;</a></h2>
-<p>Allow requests originating from the ingress gateway to the <code>web-frontend</code> application using an ALLOW action. In the rules section, we specify the source namespace (<code>istio-system</code>) of the ingress gateway, and the ingress gateway's service account name in the <code>principals</code> field.</p>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">allow-ingress-frontend.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-8-10">10</a></span>
-<span class="normal"><a href="#__codelineno-8-11">11</a></span>
-<span class="normal"><a href="#__codelineno-8-12">12</a></span>
-<span class="normal"><a href="#__codelineno-8-13">13</a></span>
-<span class="normal"><a href="#__codelineno-8-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span><span class="w"></span>
-<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span><span class="w"></span>
-<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow-ingress-frontend</span><span class="w"></span>
-<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
-<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-frontend</span><span class="w"></span>
-<a id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLOW</span><span class="w"></span>
-<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-12" name="__codelineno-8-12"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="w">            </span><span class="nt">principals</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
+</li>
+<li>
+<p>Call the <code>customers</code> service.</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s customers
+</code></pre></div>
+</li>
+<li>
+<p>Call the <code>web-frontend</code> service.</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s web-frontend <span class="p">|</span> head
+</code></pre></div>
+</li>
+</ol>
+<p>Both calls succeed.</p>
+<p>We wish to apply a policy in which <em>only <code>web-frontend</code> is allowed to call <code>customers</code></em>, and <em>only the ingress gateway can call <code>web-frontend</code></em>.</p>
+<p>Study the below authorization policy.</p>
+<div class="admonition tldr">
+<p class="admonition-title">authz-policy-customers.yaml</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span>
+<span class="normal"><a href="#__codelineno-10-14">14</a></span>
+<span class="normal"><a href="#__codelineno-10-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span><span class="w"></span>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span><span class="w"></span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allowed-customers-clients</span><span class="w"></span>
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
+<a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLOW</span><span class="w"></span>
+<a id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-14" name="__codelineno-10-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-10-15" name="__codelineno-10-15"></a><span class="w">        </span><span class="nt">principals</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cluster.local/ns/default/sa/web-frontend&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
 </code></pre></div></td></tr></table></div>
-<p>Save the above YAML to <code>allow-ingress-frontend.yaml</code> and create the policy using <code>kubectl apply -f allow-ingress-frontend.yaml</code>.</p>
-<p>A direct request to the <code>GATEWAY_IP</code> will produce a different error this time:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl http://<span class="nv">$GATEWAY_IP</span>
+</div>
+<ul>
+<li>The <code>selector</code> section specifies that the policy applies to the <code>customers</code> service.</li>
+<li>Note how the rules have a "from: source: " section indicating who is allowed in.</li>
+<li>The nomenclature for the value of the <code>principals</code> field comes from the <a href="https://spiffe.io/docs/latest/spiffe-about/overview/" target="_blank">spiffe</a> standard.  Note how it captures the service account name and namespace associated with the <code>web-frontend</code> service.  This identify is associated with the x.509 certificate used by each service when making secure mtls calls to one another.</li>
+</ul>
+<p>Tasks:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Apply the policy to your cluster.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Verify that you are no longer able to reach the <code>customers</code> pod from the <code>sleep</code> pod</li>
+</ul>
+<h3 id="challenge">Challenge<a class="headerlink" href="#challenge" title="Permanent link">&para;</a></h3>
+<p>Can you come up with a similar authorization policy for <code>web-frontend</code>?</p>
+<ul>
+<li>Use a copy of the <code>customers</code> authorization policy as a starting point</li>
+<li>Give the resource an apt name</li>
+<li>Revise the selector to match the <code>web-frontend</code> service</li>
+<li>Revise the rule to match the principal of the ingress gateway</li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>The ingress gateway has its own identity.</p>
+<p>Here is a command which can help you find the name of the service account associated with its identity:</p>
+<div class="language-shell highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl get pod -n istio-system -l <span class="nv">app</span><span class="o">=</span>istio-ingressgateway -o yaml <span class="p">|</span> grep serviceAccountName
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="go">&quot;Request failed with status code 403&quot;</span>
-</code></pre></div>
-<p>This error is coming from the <code>customers</code> service - remember we allowed calls to the web frontend. However, <code>web-frontend</code> still can't make calls to the <code>customers</code> service.</p>
-<p>Go back to the <code>curl</code> Pod running inside the cluster.  An attempt to request <code>http://web-frontend</code> will result in an RBAC error.</p>
-<p>The DENY policy is in effect, and we are only allowing calls to be made from the ingress gateway.</p>
-<h2 id="allow-requests-from-web-frontend-to-customers">Allow requests from <code>web-frontend</code> to <code>customers</code><a class="headerlink" href="#allow-requests-from-web-frontend-to-customers" title="Permanent link">&para;</a></h2>
-<p>When we deployed the <code>web-frontend</code>, we also created a service account for the Pod to use. Otherwise, all Pods in the namespace are assigned the default service account.  Using the service account we give the Pods an identity.</p>
-<p>Use that service account to specify where the customer service calls can come from.</p>
-<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">allow-web-frontend-customers.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-11-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-11-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-11-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-11-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-11-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-11-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-11-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-11-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-11-10">10</a></span>
-<span class="normal"><a href="#__codelineno-11-11">11</a></span>
-<span class="normal"><a href="#__codelineno-11-12">12</a></span>
-<span class="normal"><a href="#__codelineno-11-13">13</a></span>
-<span class="normal"><a href="#__codelineno-11-14">14</a></span>
-<span class="normal"><a href="#__codelineno-11-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span><span class="w"></span>
-<a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span><span class="w"></span>
-<a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allow-web-frontend-customers</span><span class="w"></span>
-<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
-<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
-<a id="__codelineno-11-10" name="__codelineno-11-10"></a><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
-<a id="__codelineno-11-11" name="__codelineno-11-11"></a><span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLOW</span><span class="w"></span>
-<a id="__codelineno-11-12" name="__codelineno-11-12"></a><span class="w">  </span><span class="nt">rules</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-13" name="__codelineno-11-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-14" name="__codelineno-11-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-11-15" name="__codelineno-11-15"></a><span class="w">        </span><span class="nt">principals</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cluster.local/ns/default/sa/web-frontend&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
-</code></pre></div></td></tr></table></div>
-<p>Save the above YAML to <code>allow-web-frontend-customers.yaml</code> and create the policy using <code>kubectl apply -f allow-web-frontend-customers.yaml</code>.</p>
-<p>As soon as the policy is created, we will see the web frontend working again - it will get the customer service responses. You can verify that it works by opening the GATEWAY_IP in the browser or using cURL to send the request to the GATEWAY_IP.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">export</span> <span class="nv">GATEWAY_IP</span><span class="o">=</span><span class="k">$(</span>kubectl get svc istio-ingressgateway -n istio-system -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.loadBalancer.ingress[0].ip}&#39;</span><span class="k">)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl http://<span class="nv">$GATEWAY_IP</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="go">&lt;!DOCTYPE html&gt;</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="go">&lt;html&gt;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="go">  &lt;head&gt;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="go">    &lt;title&gt;Web Frontend&lt;/title&gt;</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="go">    &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/style.css&quot; /&gt;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="go">  &lt;/head&gt;</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="go">  &lt;body class=&quot;bg-tetrate-black&quot;&gt;</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="go">...</span>
-</code></pre></div>
-<p>If we create a Pod inside the cluster again to try and directly access <code>web-frontend</code> and <code>customers</code> service, the calls will continue to fail, which is expected because we haven't explicitly allowed calls from the cURL Pod:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl run curl --image<span class="o">=</span>radial/busyboxplus:curl -i --tty --rm
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="go">If you don&#39;t see a command prompt, try pressing enter.</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="gp">[ root@curl:/ ]$ </span>curl customers
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="go">RBAC: access denied</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="gp">[ root@curl:/ ]$ </span>curl web-frontend
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="go">RBAC: access denied</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="gp">[ root@curl:/ ]$</span>
-</code></pre></div>
-<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
-<p>We have used multiple authorization policies to explicitly allow calls from the ingress to the front end and from the <code>web-frontend</code> to the <code>customers</code> service. Using a deny-all policy is a good way to start because we can control, manage, and then explicitly allow the communication we want to happen between services.</p>
-<h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
-<p>Delete the Deployments, Services, VirtualServices, and the Gateway:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl delete deploy web-frontend customers-v1
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl delete svc customers web-frontend
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>kubectl delete vs --all
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>kubectl delete gateway gateway
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>kubectl delete authorizationpolicy --all
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>kubectl delete pod curl
-</code></pre></div>
+<p>Use this service account name together with the namespace that the ingress gateway is running in to specify the value for the <code>principals</code> field.</p>
+</div>
+<h3 id="test-it">Test it<a class="headerlink" href="#test-it" title="Permanent link">&para;</a></h3>
+<p>Don't forget to verify that the policy is enforced.</p>
+<ul>
+<li>Call both services again from the sleep pod and ensure communication is no longer allowed.</li>
+<li>The console output should contain the message <em>RBAC: access denied</em>.</li>
+</ul>
+<h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>
+<p>In the next lab we show how to use Istio's traffic management features to upgrade the customers service with zero downtime.</p>
 
 
 
@@ -1102,7 +817,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../circuit_breakers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Circuit breakers" rel="prev">
+        <a href="../dashboards/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Observability" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -1111,20 +826,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Circuit breakers
+              Observability
             </div>
           </div>
         </a>
       
       
         
-        <a href="../vm_workloads/" class="md-footer__link md-footer__link--next" aria-label="Next: VM workloads" rel="next">
+        <a href="../traffic-shifting/" class="md-footer__link md-footer__link--next" aria-label="Next: Traffic shifting" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              VM workloads
+              Traffic shifting
             </div>
           </div>
           <div class="md-footer__button md-icon">
