@@ -14,7 +14,11 @@ We'll also have to modify the installation of Istio to enable collection of addi
 
 The above will enable collection of metrics for all prefixes in the list and for all workloads in the mesh. Note that this is not recommended for production environments as the number of metrics collected will be very large. Typically, we'd constrain the metrics collection of extra metrics to a specific workload. For example, we could have enabled those metrics on the Fortio deployment we'll use to generate the load, so the metrics would only be collected for that workload.
 
-Save the above to `istio-metrics.yaml` and install Istio using `istioctl install -f istio-metrics.yaml`.
+Save the above to `istio-metrics.yaml` and install Istio:
+
+```shell
+istioctl install -f istio-metrics.yaml
+```
 
 ## Deploying the sample application
 
@@ -42,7 +46,11 @@ We'll use Fortio to generate load on the `web-frontend` service - let's deploy F
     ```yaml linenums="1" title="fortio.yaml"
     --8<-- "circuit-breakers/fortio.yaml"
     ```
-Save the above file to `fortio.yaml` and deploy it using `kubectl apply -f fortio.yaml`
+Save the above file to `fortio.yaml` and deploy it:
+
+```shell
+kubectl apply -f fortio.yaml
+```
 
 Let's just make a single request to make sure everything is working:
 
@@ -65,18 +73,7 @@ server: envoy
 Let's configure the connection pool settings in the DestinationRule and set the numbers low, so we can trigger the circuit breaker:
 
 ```yaml linenums="1" title="cb-web-frontend.yaml"
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: web-frontend
-spec:
-  host: web-frontend.default.svc.cluster.local
-  trafficPolicy:
-    connectionPool:
-      http:
-        http1MaxPendingRequests: 1 # (1)
-        http2MaxRequests: 1 # (2)
-        maxRequestsPerConnection: 1 # (3)
+--8<-- "circuit-breakers/cb-web-frontend.yaml"
 ```
 
 1. The maximum number of pending HTTP requests to a destination.
