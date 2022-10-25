@@ -168,25 +168,25 @@ We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
 
 1. Create the VM
 
-   ```shell
-   gcloud compute instances create my-mesh-vm --tags=mesh-vm --machine-type=n1-standard-2
-   ```
+    ```shell
+    gcloud compute instances create my-mesh-vm --tags=mesh-vm --machine-type=n1-standard-2
+    ```
 
 1. Obtain the cluster's Pod IP address range.
 
-   ```shell
-   export CLUSTER_POD_CIDR=$(gcloud container clusters list --format=json | jq -r '.[0].clusterIpv4Cidr')
-   ```
+    ```shell
+    export CLUSTER_POD_CIDR=$(gcloud container clusters list --format=json | jq -r '.[0].clusterIpv4Cidr')
+    ```
 
 1. Create a firewall rule to allow ingress on port 80 from the cluster pods to the VM.
 
-   ```shell
-   gcloud compute firewall-rules create "cluster-pods-to-vm" \
-     --source-ranges=$CLUSTER_POD_CIDR \
-     --target-tags=mesh-vm \
-     --action=allow \
-     --rules=tcp:80
-   ```
+    ```shell
+    gcloud compute firewall-rules create "cluster-pods-to-vm" \
+      --source-ranges=$CLUSTER_POD_CIDR \
+      --target-tags=mesh-vm \
+      --action=allow \
+      --rules=tcp:80
+    ```
 
 ## Applying configuration to the Virtual Machine
 
@@ -194,67 +194,67 @@ Now it's time to configure the Virtual machine. In this example, we run a simple
 
 1. Copy the files from `vm-files` folder to the home folder on the instance. Replace `INSTANCE_ZONE` accordingly.
 
-   ```shell
-   gcloud compute scp vm-files/* my-mesh-vm:~ --zone=[INSTANCE_ZONE]
-   ```
+    ```shell
+    gcloud compute scp vm-files/* my-mesh-vm:~ --zone=[INSTANCE_ZONE]
+    ```
 
-   ```console
-     cluster.env                                                       100%  627   626.9KB/s   00:00
-     hosts                                                             100%   36    50.7KB/s   00:00
-     istio-token                                                       100%  905     1.4MB/s   00:00
-     mesh.yaml                                                         100%  668   918.7KB/s   00:00
-     root-cert.pem                                                     100% 1094     1.7MB/s   00:00
-   ```
+    ```console
+    cluster.env              100%  627   626.9KB/s   00:00
+    hosts                    100%   36    50.7KB/s   00:00
+    istio-token              100%  905     1.4MB/s   00:00
+    mesh.yaml                100%  668   918.7KB/s   00:00
+    root-cert.pem            100% 1094     1.7MB/s   00:00
+    ```
 
-2. SSH into the instance and copy the root certificate to `/etc/certs` (you can use the command from the instance details page in the SSH dropdown):
+1. SSH into the instance and copy the root certificate to `/etc/certs` (you can use the command from the instance details page in the SSH dropdown):
 
-   ```shell
-   gcloud beta compute ssh --zone=[INSTANCE_ZONE] my-mesh-vm
-   ```
+    ```shell
+    gcloud beta compute ssh --zone=[INSTANCE_ZONE] my-mesh-vm
+    ```
 
-   ```shell
-   sudo mkdir -p /etc/certs
-   sudo cp root-cert.pem /etc/certs/root-cert.pem
-   ```
+    ```shell
+    sudo mkdir -p /etc/certs
+    sudo cp root-cert.pem /etc/certs/root-cert.pem
+    ```
 
-3. Copy the `istio-token` file to `/var/run/secrets/tokens` folder:
+1. Copy the `istio-token` file to `/var/run/secrets/tokens` folder:
 
-   ```shell
-   sudo mkdir -p /var/run/secrets/tokens
-   sudo cp istio-token /var/run/secrets/tokens/istio-token
-   ```
+    ```shell
+    sudo mkdir -p /var/run/secrets/tokens
+    sudo cp istio-token /var/run/secrets/tokens/istio-token
+    ```
 
-4. Download and install the Istio sidecar package:
+1. Download and install the Istio sidecar package:
 
-   ```shell
-   curl -LO https://storage.googleapis.com/istio-release/releases/{{istio.version}}/deb/istio-sidecar.deb
-   sudo dpkg -i istio-sidecar.deb
-   ```
+    ```shell
+    curl -LO https://storage.googleapis.com/istio-release/releases/{{istio.version}}/deb/istio-sidecar.deb
+    sudo dpkg -i istio-sidecar.deb
+    ```
 
-5. Copy `cluster.env` to `/var/lib/istio/envoy/`:
+1. Copy `cluster.env` to `/var/lib/istio/envoy/`:
 
-   ```shell
-   sudo cp cluster.env /var/lib/istio/envoy/cluster.env
-   ```
+    ```shell
+    sudo cp cluster.env /var/lib/istio/envoy/cluster.env
+    ```
 
-6. Copy Mesh config (`mesh.yaml`) to `/etc/istio/config/mesh`:
+1. Copy Mesh config (`mesh.yaml`) to `/etc/istio/config/mesh`:
 
-   ```shell
-   sudo cp mesh.yaml /etc/istio/config/mesh
-   ```
+    ```shell
+    sudo cp mesh.yaml /etc/istio/config/mesh
+    ```
 
-7. Add the istiod host to the `/etc/hosts` file:
+1. Add the istiod host to the `/etc/hosts` file:
 
-   ```shell
-   sudo sh -c 'cat $(eval echo ~$SUDO_USER)/hosts >> /etc/hosts'
-   ```
+    ```shell
+    sudo sh -c 'cat $(eval echo ~$SUDO_USER)/hosts >> /etc/hosts'
+    ```
 
-8. Change the ownership of files in `/etc/certs` and `/var/lib/istio/envoy` to the Istio proxy:
+1. Change the ownership of files in `/etc/certs` and `/var/lib/istio/envoy` to the Istio proxy:
 
-   ```shell
-   sudo mkdir -p /etc/istio/proxy
-   sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
-   ```
+    ```shell
+    sudo mkdir -p /etc/istio/proxy
+    sudo chown -R istio-proxy /var/lib/istio /etc/certs /etc/istio/proxy /etc/istio/config /var/run/secrets /etc/certs/root-cert.pem
+    ```
 
 With all files in place, we are ready to start Istio on the virtual machine.
 
@@ -268,20 +268,20 @@ You can see the WorkloadEntry creation _in action_ as follows:
       kubectl get workloadentry -n vm-namespace --watch
       ```
 
-2. On the VM, start the Istio service:
+1. On the VM, start the Istio service:
 
       ```shell
       sudo systemctl start istio
       ```
 
-3. You should see the WorkloadEntry appear
+1. You should see the WorkloadEntry appear
 
       ```console
       NAME                  AGE   ADDRESS
       hello-vm-10.128.0.7   12m   10.128.0.7
       ```
 
-4. Press Ctrl-C to stop watching for changes.
+1. Press Ctrl-C to stop watching for changes.
 
 On the VM, you can check that the `istio` service is running with `systemctl status istio`. Alternatively, we can look at the contents of the `/var/log/istio/istio.log` to see that the proxy was successfully started.
 
