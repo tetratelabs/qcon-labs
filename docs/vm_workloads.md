@@ -56,7 +56,7 @@ For virtual machines to access the Istio's control plane, we need to create a Ga
 We can use another script from the Istio package to create these resources and expose the control plane:
 
 ```shell
-kubectl apply -f samples/multicluster/expose-istiod.yaml
+kubectl apply -n istio-system -f samples/multicluster/expose-istiod.yaml
 ```
 
 ```console
@@ -132,7 +132,11 @@ Save the above YAML to `workloadgroup.yaml` and create the resource with `kubect
 Virtual machine needs information about the cluster and Istio's control plane to connect to it. To generate the required files, we can run `istioctl x workload entry` command. We save all generated files to the `WORK_DIR`:
 
 ```shell
-istioctl x workload entry configure -f workloadgroup.yaml -o "${WORK_DIR}" --autoregister --clusterID "Kubernetes"
+istioctl x workload entry configure \
+  -f workloadgroup.yaml \
+  -o "${WORK_DIR}" \
+  --autoregister \
+  --clusterID "Kubernetes"
 ```
 
 ```console
@@ -169,7 +173,9 @@ We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
 1. Create the VM
 
     ```shell
-    gcloud compute instances create my-mesh-vm --tags=mesh-vm --machine-type=n1-standard-2
+    gcloud compute instances create my-mesh-vm \
+      --tags=mesh-vm \
+      --machine-type=n1-standard-2
     ```
 
 1. Obtain the cluster's Pod IP address range.
