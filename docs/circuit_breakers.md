@@ -1,82 +1,92 @@
 # Circuit breakers
 
-In this lab we'll demonstrate how to configure a circuit breaker and outlier detection using Istio.
+This lab demonstrate how to configure a circuit breakers with and without outlier detection in Istio.
 
 ## Prerequisites and setup
 
 - Kubernetes with Istio and other tools (Prometheus, Zipkin, Grafana) installed
+- `web-frontend` and `customers` workloads already deployed and running.
 
-We'll also have to modify the installation of Istio to enable collection of additional metrics:
+## Collect additional metrics
+
+Modify the installation of Istio to enable collection of additional metrics:
 
 ```yaml linenums="1" title="istio-metrics.yaml"
 --8<-- "circuit-breakers/istio-metrics.yaml"
 ```
 
-The above will enable collection of metrics for all prefixes in the list and for all workloads in the mesh. Note that this is not recommended for production environments as the number of metrics collected will be very large. Typically, we'd constrain the metrics collection of extra metrics to a specific workload. For example, we could have enabled those metrics on the Fortio deployment we'll use to generate the load, so the metrics would only be collected for that workload.
+The above will enable collection of metrics for all prefixes in the list and for all workloads in the mesh.
 
-Save the above to `istio-metrics.yaml` and install Istio:
+!!! info
+
+    This is not recommended for production environments as the number of metrics collected will be very large. 
+
+    Typically, we'd constrain the metrics collection of extra metrics to a specific workload. For example, we could have enabled those metrics on the Fortio deployment we'll use to generate the load, so the metrics would only be collected for that workload).
+
+Save the above to `istio-metrics.yaml` and apply the configuration to your Istio installation:
 
 ```shell
 istioctl install -f istio-metrics.yaml
 ```
 
-## Deploying the sample application
+## Install Fortio
 
-The `web-frontend` and `customers-v1` workloads should already be running.
-If not, you can apply the below manifest to redeploy them:
+Let us try and generate some load to the `web-frontend` workload and see the distribution of responses.
 
-??? note "Click for cb-lab.yaml"
+We'll use [Fortio](https://fortio.org/){target=_blank} to generate load on the `web-frontend` service.
 
-    ```yaml linenums="1" title="cb-lab.yaml"
-    --8<-- "circuit-breakers/cb-lab.yaml"
+1. Deploy Fortio
+
+    ??? note "Click for fortio.yaml"
+
+        ```yaml linenums="1" title="fortio.yaml"
+        --8<-- "circuit-breakers/fortio.yaml"
+        ```
+
+    Save the above file to `fortio.yaml` and deploy it:
+
+    ```shell
+    kubectl apply -f fortio.yaml
+    ```
+
+1. Make a single request to make sure everything is working:
+
+    ```shell
+    export FORTIO_POD=$(kubectl get pods -l app=fortio -o 'jsonpath={.items[0].metadata.name}')
+    ```
+
+    Then:
+
+    ```shell
+    kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio curl http://web-frontend
+    ```
+
+    The output should resemble this:
+
+    ```console
+    ...
+    HTTP/1.1 200 OK
+    x-powered-by: Express
+    content-type: text/html; charset=utf-8
+    content-length: 2471
+    etag: W/"9a7-hEXE7lJW5CDgD+e2FypGgChcgho"
+    x-envoy-upstream-service-time: 28
+    server: envoy
     ```
 
 ## Circuit breaker - connection pool settings
 
-With services deployed, let's try and generate some load to the `web-frontend` workload and see the distribution of responses.
-
-We'll use Fortio to generate load on the `web-frontend` service - let's deploy Fortio first.
-
-??? note "Click for fortio.yaml"
-
-    ```yaml linenums="1" title="fortio.yaml"
-    --8<-- "circuit-breakers/fortio.yaml"
-    ```
-Save the above file to `fortio.yaml` and deploy it:
-
-```shell
-kubectl apply -f fortio.yaml
-```
-
-Let's just make a single request to make sure everything is working:
-
-```shell
-export FORTIO_POD=$(kubectl get pods -l app=fortio -o 'jsonpath={.items[0].metadata.name}')
-kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio curl http://web-frontend
-```
-
-```console
-...
-HTTP/1.1 200 OK
-x-powered-by: Express
-content-type: text/html; charset=utf-8
-content-length: 2471
-etag: W/"9a7-hEXE7lJW5CDgD+e2FypGgChcgho"
-x-envoy-upstream-service-time: 28
-server: envoy
-```
-
-Let's configure the connection pool settings in the DestinationRule and set the numbers low, so we can trigger the circuit breaker:
+Study the following DestionationRule:
 
 ```yaml linenums="1" title="cb-web-frontend.yaml"
 --8<-- "circuit-breakers/cb-web-frontend.yaml"
 ```
 
 1. The maximum number of pending HTTP requests to a destination.
+1. The maximum number of concurrent requests to a destination.
+1. The maximum number of requests per connection.
 
-2. The maximum number of concurrent requests to a destination.
-
-3. The maximum number of requests per connection.
+It configures the connection pool for `web-frontend` with very low thresholds, to easily trigger the circuit breaker.
 
 Save the above YAML to `cb-web-frontend.yaml` and apply the changes:
 
@@ -86,7 +96,7 @@ kubectl apply -f cb-web-frontend.yaml
 
 Since all values are set to 1, we won't trigger the circuit breaker if we send the request using one connection and one request per second.
 
-However, if we increase the number of connections and send more requests (i.e. 2 workers sending requests concurrently, and sending 50 requests), we'll start getting errors.
+If we increase the number of connections and send more requests (i.e. 2 workers sending requests concurrently, and sending 50 requests), we'll start getting errors.
 
 The errors happen because the `http2MaxRequests` is set to 1 and we have more than 1 concurrent request being sent. Additonally, we're exceeding the `maxRequestsPerConnection` limit.
 
@@ -101,25 +111,47 @@ Code 503 : 26 (52.0 %)
 ```
 
 !!! Tip
+
     To reset the metric counters, run `kubectl exec $FORTIO_POD -c istio-proxy -- curl -X POST localhost:15000/reset_counters`
 
-If we open Zipkin (`istioctl dash zipkin`) and look at the errors, we'll see that the requests are failing because the circuit breaker is tripped (response flags are set to `UO` and status code to 503).
+## Observe failures in Zipkin
 
-Once you open Zipkin you can click the **Run Query** button and pick one of the failing traces to see the details. You can identify the failing trace by looking at the number of spans - the failing trace will have 1 spans, while the successful ones will have 4 spans.
+Open the Zipkin dashboard:
+
+```shell
+istioctl dash zipkin
+```
+
+In the Zipkin UI, click the **Run Query** button and pick a failing trace to see the details.
+You can identify failing traces by looking at the number of spans - the failing trace will have 1 span, while the successful ones will have 4 spans.
+
+The requests are failing because the circuit breaker is tripped.  Response flags are set to `UO` (Upstream Overflow) and the status code is 503 (service unavailable).
 
 ![Zipkin 503s](zipkin-503.png)
 
-Another option is looking at the Prometheus metrics directly. Open the Prometheus dashboard using `istioctl dash prometheus` and look for the following metric:
+## Prometheus metrics
+
+Another option is looking at the Prometheus metrics directly.
+
+Open the Prometheus dashboard:
+
+```shell
+istioctl dash prometheus
+```
+
+Apply the following PromQL query:
 
 ```promql
 envoy_cluster_upstream_rq_pending_overflow{app="fortio", cluster_name="outbound|80||web-frontend.default.svc.cluster.local"}
 ```
 
-The query shows the metrics for requests originating from the fortio app and going to the `web-frontend` service.
+The `upstream_rq_pending_overflow` and other metrics are described [here](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#general){target=_blank}.
+
+The query shows the metrics for requests originating from the `fortio` app and going to the `web-frontend` service.
 
 ![Prometheus](prom-overflow.png)
 
-Alternatively, we can look at the metrics directly from the `istio-proxy` container in the Fortio Pod:
+We can also look at the metrics directly from the `istio-proxy` container in the Fortio Pod:
 
 ```shell
 kubectl exec "$FORTIO_POD" -c istio-proxy -- pilot-agent request GET stats | grep web-frontend | grep pending
@@ -135,7 +167,9 @@ cluster.outbound|80||web-frontend.default.svc.cluster.local.upstream_rq_pending_
 cluster.outbound|80||web-frontend.default.svc.cluster.local.upstream_rq_pending_total: 24
 ```
 
-To resolve these errors, we can adjust the circuit breaker settings. We can increase the maximum number of concurrent requests to 2 (`http2MaxRequests`):
+To resolve these errors, we can adjust the circuit breaker settings.
+
+Increase the maximum number of concurrent requests to 2 (`http2MaxRequests`), as shown below:
 
 ```yaml linenums="1" hl_lines="11"
 apiVersion: networking.istio.io/v1alpha3
@@ -210,12 +244,19 @@ spec:
         maxRequestsPerConnection: 2
 ```
 
-With these settings (assuming 2 concurrent connections), we can easily handle a higher number of requests. Note that the numbers we used in settings are just examples and are not realistic - we set them intentionally low to make the circuit breaker easier to trip.
+With these settings (assuming 2 concurrent connections), we can easily handle a higher number of requests.
 
-Before continuing, delete the DestinationRule and reset the metric counters:
+To be clear, the numbers we used in settings are just examples and are not realistic - we set them intentionally low to make the circuit breaker easier to trip.
+
+Before continuing, delete the DestinationRule:
 
 ```shell
-kubectl delete dr --all
+kubectl delete destinationrule web-frontend
+```
+
+Reset the metric counters:
+
+```shell
 kubectl exec $FORTIO_POD -c istio-proxy -- curl -X POST localhost:15000/reset_counters
 ```
 
