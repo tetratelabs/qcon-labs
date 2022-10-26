@@ -1,0 +1,1138 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.3">
+    
+    
+      
+        <title>VM workloads - QCon 2022 - Istio Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7a952b86.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vm-workloads" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="QCon 2022 - Istio Workshop" class="md-header__button md-logo" aria-label="QCon 2022 - Istio Workshop" data-md-component="logo">
+      
+  <img src="../assets/tetrate-logo-white.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QCon 2022 - Istio Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VM workloads
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tetratelabs/qcon-labs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QCon 2022 - Istio Workshop" class="md-nav__button md-logo" aria-label="QCon 2022 - Istio Workshop" data-md-component="logo">
+      
+  <img src="../assets/tetrate-logo-white.png" alt="logo">
+
+    </a>
+    QCon 2022 - Istio Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tetratelabs/qcon-labs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environment/" class="md-nav__link">
+        Lab environment
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Install Istio
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sidecar-injection/" class="md-nav__link">
+        Sidecar injection
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-app/" class="md-nav__link">
+        The application
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../discovery/" class="md-nav__link">
+        Service discovery and load balancing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingress/" class="md-nav__link">
+        Ingress
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboards/" class="md-nav__link">
+        Observability
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../traffic-shifting/" class="md-nav__link">
+        Traffic shifting
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../circuit_breakers/" class="md-nav__link">
+        Circuit breakers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          VM workloads
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        VM workloads
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#set-default-compute-region-and-zone" class="md-nav__link">
+    Set default compute region and zone
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-workloadentry-auto-registration" class="md-nav__link">
+    Enable WorkloadEntry auto-registration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provision-the-vm" class="md-nav__link">
+    Provision the VM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-customers-to-the-vm" class="md-nav__link">
+    Deploy customers to the VM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-data-plane-communication" class="md-nav__link">
+    Enable data-plane communication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-control-plane-communication" class="md-nav__link">
+    Configure control-plane communication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#define-a-workloadgroup" class="md-nav__link">
+    Define a WorkloadGroup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-and-configure-the-envoy-sidecar-on-the-vm" class="md-nav__link">
+    Install and configure the Envoy sidecar on the VM
+  </a>
+  
+    <nav class="md-nav" aria-label="Install and configure the Envoy sidecar on the VM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-the-configuration-files" class="md-nav__link">
+    Generate the configuration files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transfer-the-files-to-the-vm" class="md-nav__link">
+    Transfer the files to the VM
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-vm" class="md-nav__link">
+    Configure the VM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-sidecar" class="md-nav__link">
+    Start the sidecar
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-it" class="md-nav__link">
+    Test it!
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-services-from-the-vm" class="md-nav__link">
+    Access services from the VM
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summary/" class="md-nav__link">
+        Summary
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#set-default-compute-region-and-zone" class="md-nav__link">
+    Set default compute region and zone
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-workloadentry-auto-registration" class="md-nav__link">
+    Enable WorkloadEntry auto-registration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provision-the-vm" class="md-nav__link">
+    Provision the VM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-customers-to-the-vm" class="md-nav__link">
+    Deploy customers to the VM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-data-plane-communication" class="md-nav__link">
+    Enable data-plane communication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-control-plane-communication" class="md-nav__link">
+    Configure control-plane communication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#define-a-workloadgroup" class="md-nav__link">
+    Define a WorkloadGroup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-and-configure-the-envoy-sidecar-on-the-vm" class="md-nav__link">
+    Install and configure the Envoy sidecar on the VM
+  </a>
+  
+    <nav class="md-nav" aria-label="Install and configure the Envoy sidecar on the VM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-the-configuration-files" class="md-nav__link">
+    Generate the configuration files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transfer-the-files-to-the-vm" class="md-nav__link">
+    Transfer the files to the VM
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-the-vm" class="md-nav__link">
+    Configure the VM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-sidecar" class="md-nav__link">
+    Start the sidecar
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-it" class="md-nav__link">
+    Test it!
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-services-from-the-vm" class="md-nav__link">
+    Access services from the VM
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/tetratelabs/qcon-labs/edit/main/docs/vm-workloads.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="vm-workloads">VM workloads<a class="headerlink" href="#vm-workloads" title="Permanent link">&para;</a></h1>
+<p>Istio supports running workloads outside of Kubernetes.
+The canonical example is a legacy application that, for some reason, is not containerized and must run on a virtual machine (VM).</p>
+<p>To explore <a href="https://istio.io/latest/docs/ops/deployment/vm-architecture/" target="_blank">onboarding VM workloads with Istio</a>, let us pretend that our venerable <code>customers</code> service is such a legacy application.</p>
+<p>In this lab, you will:</p>
+<ol>
+<li>Enable [VM] workload entry auto-registration (a feature considered experimental at time of writing)</li>
+<li>Provision a VM and deploy the <code>customers</code> app on it.</li>
+<li>Enable data-plane communication between the VM workload and the mesh</li>
+<li>Configure control-plane communication between <code>istiod</code> and the VM</li>
+<li>Define a WorkloadGroup, a concept analogous to Kubernetes <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">Deployment</a> resource</li>
+<li>Install and configure the Envoy sidecar on the VM</li>
+</ol>
+<p>The fruit of this labor will be to witness the <code>web-frontend</code> service successfully make calls to the <code>customers</code> backend running on the VM.</p>
+<p>The instructions in this lab are specific to Google Cloud Platform (GCP).</p>
+<h2 id="set-default-compute-region-and-zone">Set default compute region and zone<a class="headerlink" href="#set-default-compute-region-and-zone" title="Permanent link">&para;</a></h2>
+<p>Configuring the default region and zone helps avoid specifying them in subsequent commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gcloud config <span class="nb">set</span> compute/region us-west1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gcloud config <span class="nb">set</span> compute/zone us-west1-a
+</code></pre></div>
+<h2 id="enable-workloadentry-auto-registration">Enable WorkloadEntry auto-registration<a class="headerlink" href="#enable-workloadentry-auto-registration" title="Permanent link">&para;</a></h2>
+<p>Update the mesh configuration to turn on this capability:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>istioctl install <span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  --set values.pilot.env.PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+<h2 id="provision-the-vm">Provision the VM<a class="headerlink" href="#provision-the-vm" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gcloud compute instances create my-mesh-vm <span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  --tags<span class="o">=</span>mesh-vm <span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  --machine-type<span class="o">=</span>n1-standard-2
+</code></pre></div>
+<p>Above, we tag the VM to simplify configuring communication to the VM.</p>
+<h2 id="deploy-customers-to-the-vm">Deploy <code>customers</code> to the VM<a class="headerlink" href="#deploy-customers-to-the-vm" title="Permanent link">&para;</a></h2>
+<p>Ssh to the VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gcloud compute ssh ubuntu@my-mesh-vm
+</code></pre></div>
+<p>The most expedient way to deploy the <code>customers</code> app is to leverage its Docker image.  So..</p>
+<ol>
+<li>
+<p>Install docker:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo apt-get update
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo apt-get -y install docker.io
+</code></pre></div>
+</li>
+<li>
+<p>Run the container, using version 2.0 to easily distinguish this workload from the one already running on Kubernetes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo docker run -d --name customers <span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  --net host <span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  gcr.io/tetratelabs/customers:2.0.0
+</code></pre></div>
+</li>
+</ol>
+<p>Verify that the <code>customers</code> app is running:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl localhost:3000
+</code></pre></div>
+<h2 id="enable-data-plane-communication">Enable data-plane communication<a class="headerlink" href="#enable-data-plane-communication" title="Permanent link">&para;</a></h2>
+<p>In this scenario, both the VM and the cluster exist in the same network.</p>
+<p>Use a firewall rule to enable communication from the Pod IP addresses to the VM in question.</p>
+<ol>
+<li>
+<p>Capture the Pod IP address range:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span> <span class="nv">CLUSTER_POD_CIDR</span><span class="o">=</span><span class="k">$(</span>gcloud container clusters list --format<span class="o">=</span>json <span class="p">|</span> jq -r <span class="s1">&#39;.[0].clusterIpv4Cidr&#39;</span><span class="k">)</span>
+</code></pre></div>
+</li>
+<li>
+<p>Apply the firewall rule:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gcloud compute firewall-rules create <span class="s2">&quot;cluster-pods-to-vm&quot;</span> <span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  --source-ranges<span class="o">=</span><span class="nv">$CLUSTER_POD_CIDR</span> <span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  --target-tags<span class="o">=</span>mesh-vm <span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  --action<span class="o">=</span>allow <span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  --rules<span class="o">=</span>tcp:3000
+</code></pre></div>
+</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The path of communication between the VM workload and the Kubernetes cluster depends on the network topology.</p>
+<p>In scenarios where the VM and the cluster are on separate networks, that communication path is altered to use an "east-west" ingress gateway.</p>
+</div>
+<h2 id="configure-control-plane-communication">Configure control-plane communication<a class="headerlink" href="#configure-control-plane-communication" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Deploy an additional Istio Ingress Gateway, that we label as "eastwest".  The Istio distribution provides a simple script for this purpose.</p>
+<p>First, navigate to your Istio distribution folder, then run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>./samples/multicluster/gen-eastwest-gateway.sh --single-cluster <span class="p">|</span> istioctl install -y -f -
+</code></pre></div>
+</li>
+<li>
+<p>Confirm the presence of the new "eastwest" gateway deployment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl get pod -n istio-system
+</code></pre></div>
+</li>
+<li>
+<p>Expose the services of <code>istiod</code> with a <code>Gateway</code> and <code>VirtualService</code> resource.  Here too, the Istio distribution provides the recipe:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl apply -n istio-system -f ./samples/multicluster/expose-istiod.yaml
+</code></pre></div>
+</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The above resources (Gateway and VirtualService) configure the eastwest-gateway to listen on ports 15012 (used for control plane - istiod) and 15017 (used for pilot discovery validation webhook).</p>
+<p>The VirtualService matches the requests on the two ports and then routes them to istiod to appropriate ports.</p>
+</div>
+<h2 id="define-a-workloadgroup">Define a WorkloadGroup<a class="headerlink" href="#define-a-workloadgroup" title="Permanent link">&para;</a></h2>
+<p>Istio provides the WorkloadGroup and WorkloadEntry resources; they are the VM analogs of the Kubernetes Deployment and Pod resources.</p>
+<details class="tldr" open="open">
+<summary>customers-workloadgroup.yaml</summary>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-13-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-13-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-13-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-13-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-13-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-13-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-13-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-13-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-13-10">10</a></span>
+<span class="normal"><a href="#__codelineno-13-11">11</a></span>
+<span class="normal"><a href="#__codelineno-13-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WorkloadGroup</span><span class="w"></span>
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<a id="__codelineno-13-7" name="__codelineno-13-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-13-8" name="__codelineno-13-8"></a><span class="w">  </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-13-9" name="__codelineno-13-9"></a><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-13-10" name="__codelineno-13-10"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
+<a id="__codelineno-13-11" name="__codelineno-13-11"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-13-12" name="__codelineno-13-12"></a><span class="w">    </span><span class="nt">serviceAccount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</details>
+<p>This resource provides a template for Workload Entries, and ensures that newly-created workload entries are associated with the existing <code>customers</code> service account, for workload identity purposes.</p>
+<p>Apply the above to the cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl apply -f customers-workloadgroup.yaml
+</code></pre></div>
+<h2 id="install-and-configure-the-envoy-sidecar-on-the-vm">Install and configure the Envoy sidecar on the VM<a class="headerlink" href="#install-and-configure-the-envoy-sidecar-on-the-vm" title="Permanent link">&para;</a></h2>
+<h3 id="generate-the-configuration-files">Generate the configuration files<a class="headerlink" href="#generate-the-configuration-files" title="Permanent link">&para;</a></h3>
+<p>The <code>istioctl</code> CLI provides a command to automate the generation of all files needed to configure the Envoy sidecar on the VM:</p>
+<ol>
+<li>
+<p>Create a folder to contain these files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>mkdir vm_files
+</code></pre></div>
+</li>
+<li>
+<p>Run the command to generate the VM files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>istioctl x workload entry configure <span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  --file customers-workloadgroup.yaml <span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  --output vm_files <span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  --autoregister
+</code></pre></div>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">VM onboarding is not a one-time action</p>
+<p>Whenever we update the WorkloadGroup resource, we also have to re-create the configuration (run the <code>istioctl x workload entry configure</code> command) and copy the generated files to the VM.</p>
+</div>
+<p>Inspect the contents of the <code>vm_files</code> folder.</p>
+<p>Here is how each file is described in the <a href="https://istio.io/latest/docs/setup/install/virtual-machine/#create-files-to-transfer-to-the-virtual-machine">Istio documentation</a>:</p>
+<ul>
+<li><code>cluster.env</code>: Contains metadata that identifies what namespace, service account, network CIDR and (optionally) what inbound ports to capture.</li>
+<li><code>istio-token</code>: A Kubernetes token used to get certs from the CA.</li>
+<li><code>mesh.yaml</code>: Provides <code>ProxyConfig</code> to configure <code>discoveryAddress</code>, health-checking probes, and some authentication options.</li>
+<li><code>root-cert.pem</code>: The root certificate used to authenticate.</li>
+<li><code>hosts</code>: An addendum to <code>/etc/hosts</code> that the proxy will use to reach istiod for xDS.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>To onboard the VM workload the sidecar also nees the Istio mTLS certificate. When the sidcear starts it uses the <code>istio-token</code> file to prove its identity to Istio control plane and to obtain the Istio mTLS certificate. The mTLS certificate is stored on disk for cases when the VM restarts.</p>
+<p>The expiration time on the initial <code>istio-token</code> is 1 hour. If it takes you longer than 1 hour to onboard the VM, you' ll need to re-run the <code>istioctl x workload entry configure</code> command to generate a new token.</p>
+<p>Once the VM obtains the mTLS certificate, it can use it to prove its identity. The certificate is valid for 24 hours and is automatically rotated before it expires.</p>
+</div>
+<h3 id="transfer-the-files-to-the-vm">Transfer the files to the VM<a class="headerlink" href="#transfer-the-files-to-the-vm" title="Permanent link">&para;</a></h3>
+<p>Use the following command to copy the contents of the <code>vm_files</code> folder to the VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gcloud compute scp vm_files/* ubuntu@my-mesh-vm:
+</code></pre></div>
+<h3 id="configure-the-vm">Configure the VM<a class="headerlink" href="#configure-the-vm" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>SSH onto the VM</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gcloud compute ssh my-mesh-vm
+</code></pre></div>
+</li>
+<li>
+<p>Install the root certificate to <code>/etc/certs</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo mkdir -p /etc/certs
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>sudo cp ~/root-cert.pem /etc/certs/root-cert.pem
+</code></pre></div>
+</li>
+<li>
+<p>Install the token to <code>/var/run/secrets/tokens</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo mkdir -p /var/run/secrets/tokens
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>sudo cp ~/istio-token /var/run/secrets/tokens/istio-token
+</code></pre></div>
+</li>
+<li>
+<p>Download and install the Istio sidecar package:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo dpkg -i istio-sidecar.deb
+</code></pre></div>
+</li>
+<li>
+<p>Install <code>cluster.env</code> to <code>/var/lib/istio/envoy/</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>sudo cp ~/cluster.env /var/lib/istio/envoy/cluster.env
+</code></pre></div>
+</li>
+<li>
+<p>Install the Mesh Config to <code>/etc/istio/config/mesh</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo cp ~/mesh.yaml /etc/istio/config/mesh
+</code></pre></div>
+</li>
+<li>
+<p>Add the <code>istiod</code> host to <code>/etc/hosts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo sh -c <span class="s1">&#39;cat $(eval echo ~$SUDO_USER)/hosts &gt;&gt; /etc/hosts&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Change the ownership of files in <code>/etc/certs</code> and <code>/var/lib/istio/envoy</code> to the Istio proxy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo mkdir -p /etc/istio/proxy
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo chown -R istio-proxy /etc/certs /var/run/secrets /var/lib/istio /etc/istio/config /etc/istio/proxy
+</code></pre></div>
+</li>
+</ol>
+<p>With all files in place, we are ready to start the sidecar on the VM.</p>
+<h2 id="start-the-sidecar">Start the sidecar<a class="headerlink" href="#start-the-sidecar" title="Permanent link">&para;</a></h2>
+<p>Because we used the VM auto-registration, Istio automatically creates the WorkloadEntry resource for us shortly after we start the Istio service on the VM.</p>
+<ol>
+<li>
+<p>Watch for Workloadentry resources using the <code>--watch</code> flag</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl get workloadentry --watch
+</code></pre></div>
+</li>
+<li>
+<p>On the VM, start the Istio service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo systemctl start istio
+</code></pre></div>
+</li>
+<li>
+<p>See the WorkloadEntry appear:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="go">NAME                      AGE   ADDRESS</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="go">customers-10.128.0.7   12s   10.128.0.7</span>
+</code></pre></div>
+</li>
+<li>
+<p>Press Ctrl-C to stop watching for changes.</p>
+</li>
+</ol>
+<p>On the VM, check that the <code>istio</code> service is running:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo systemctl status istio.service
+</code></pre></div>
+<p>The full logs can be accessed with <code>journalctl</code> (or by tailing <code>/var/log/istio/istio.log</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo journalctl -u istio.service
+</code></pre></div>
+<h2 id="test-it">Test it!<a class="headerlink" href="#test-it" title="Permanent link">&para;</a></h2>
+<p>Confirm that the <code>customer</code> workload is accessible from the Kubernetes cluster.</p>
+<ol>
+<li>
+<p>Confirm that <code>web-frontend</code> now has <strong>two</strong> endpoints for the customers service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>istioctl proxy-config endpoints deploy/web-frontend.default <span class="p">|</span> grep customers
+</code></pre></div>
+</li>
+<li>
+<p>Open a browser to your <code>$GATEWAY_IP</code> and see whether you can get the two-column version of the customers service to display (you may need to refresh the page once or twice)</p>
+</li>
+<li>
+<p>Call <code>customers</code> directly from <code>sleep</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
+</code></pre></div>
+<p>Then:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s customers
+</code></pre></div>
+</li>
+</ol>
+<h2 id="access-services-from-the-vm">Access services from the VM<a class="headerlink" href="#access-services-from-the-vm" title="Permanent link">&para;</a></h2>
+<p>Deploy a "Hello world" application to the Kubernetes cluster:</p>
+<details class="note">
+<summary>Click for hello-world.yaml</summary>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">hello-world.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-34-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-34-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-34-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-34-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-34-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-34-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-34-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-34-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-34-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-34-10">10</a></span>
+<span class="normal"><a href="#__codelineno-34-11">11</a></span>
+<span class="normal"><a href="#__codelineno-34-12">12</a></span>
+<span class="normal"><a href="#__codelineno-34-13">13</a></span>
+<span class="normal"><a href="#__codelineno-34-14">14</a></span>
+<span class="normal"><a href="#__codelineno-34-15">15</a></span>
+<span class="normal"><a href="#__codelineno-34-16">16</a></span>
+<span class="normal"><a href="#__codelineno-34-17">17</a></span>
+<span class="normal"><a href="#__codelineno-34-18">18</a></span>
+<span class="normal"><a href="#__codelineno-34-19">19</a></span>
+<span class="normal"><a href="#__codelineno-34-20">20</a></span>
+<span class="normal"><a href="#__codelineno-34-21">21</a></span>
+<span class="normal"><a href="#__codelineno-34-22">22</a></span>
+<span class="normal"><a href="#__codelineno-34-23">23</a></span>
+<span class="normal"><a href="#__codelineno-34-24">24</a></span>
+<span class="normal"><a href="#__codelineno-34-25">25</a></span>
+<span class="normal"><a href="#__codelineno-34-26">26</a></span>
+<span class="normal"><a href="#__codelineno-34-27">27</a></span>
+<span class="normal"><a href="#__codelineno-34-28">28</a></span>
+<span class="normal"><a href="#__codelineno-34-29">29</a></span>
+<span class="normal"><a href="#__codelineno-34-30">30</a></span>
+<span class="normal"><a href="#__codelineno-34-31">31</a></span>
+<span class="normal"><a href="#__codelineno-34-32">32</a></span>
+<span class="normal"><a href="#__codelineno-34-33">33</a></span>
+<span class="normal"><a href="#__codelineno-34-34">34</a></span>
+<span class="normal"><a href="#__codelineno-34-35">35</a></span>
+<span class="normal"><a href="#__codelineno-34-36">36</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span><span class="w"></span>
+<a id="__codelineno-34-2" name="__codelineno-34-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span><span class="w"></span>
+<a id="__codelineno-34-3" name="__codelineno-34-3"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-4" name="__codelineno-34-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-5" name="__codelineno-34-5"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-6" name="__codelineno-34-6"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-7" name="__codelineno-34-7"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-8" name="__codelineno-34-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<a id="__codelineno-34-9" name="__codelineno-34-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-10" name="__codelineno-34-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-11" name="__codelineno-34-11"></a><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-12" name="__codelineno-34-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-13" name="__codelineno-34-13"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-14" name="__codelineno-34-14"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-15" name="__codelineno-34-15"></a><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-16" name="__codelineno-34-16"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-17" name="__codelineno-34-17"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-18" name="__codelineno-34-18"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io/tetratelabs/hello-world:1.0.0</span><span class="w"></span>
+<a id="__codelineno-34-19" name="__codelineno-34-19"></a><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Always</span><span class="w"></span>
+<a id="__codelineno-34-20" name="__codelineno-34-20"></a><span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">svc</span><span class="w"></span>
+<a id="__codelineno-34-21" name="__codelineno-34-21"></a><span class="w">          </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-22" name="__codelineno-34-22"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
+<a id="__codelineno-34-23" name="__codelineno-34-23"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-34-24" name="__codelineno-34-24"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span><span class="w"></span>
+<a id="__codelineno-34-25" name="__codelineno-34-25"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-34-26" name="__codelineno-34-26"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-27" name="__codelineno-34-27"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-28" name="__codelineno-34-28"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-29" name="__codelineno-34-29"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-30" name="__codelineno-34-30"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-31" name="__codelineno-34-31"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-32" name="__codelineno-34-32"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span><span class="w"></span>
+<a id="__codelineno-34-33" name="__codelineno-34-33"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-34-34" name="__codelineno-34-34"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w"></span>
+<a id="__codelineno-34-35" name="__codelineno-34-35"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span><span class="w"></span>
+<a id="__codelineno-34-36" name="__codelineno-34-36"></a><span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+</details>
+<p>Save the above YAML to <code>hello-world.yaml</code> and deploy it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>kubectl apply -f hello-world.yaml
+</code></pre></div>
+<p>Wait for the Pods to become ready and, from the VM, try to access the Kubernetes service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>curl http://hello-world.default
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="go">Hello World</span>
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../circuit_breakers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Circuit breakers" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Circuit breakers
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../summary/" class="md-footer__link md-footer__link--next" aria-label="Next: Summary" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Summary
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "content.code.annotate", "navigation.expand"], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.37e9125f.min.js"></script>
+      
+    
+  </body>
+</html>
