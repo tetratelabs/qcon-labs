@@ -1,6 +1,6 @@
 # Circuit breakers
 
-This lab demonstrate how to configure a circuit breakers with and without outlier detection in Istio.
+This lab demonstrate how to configure [circuit breaking](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking){target=_blank} both with and without outlier detection in Istio.
 
 ## Prerequisites and setup
 
