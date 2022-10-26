@@ -27,7 +27,8 @@ istioctl install -f istio-vm-install.yaml
 ```
 
 Once the installation completes, we can deploy a separate ingress gateway that will be used to expose the Istio's control plane to the virtual machine.
-## Installing and configuring the east-west gateway
+
+## Install and configure the east-west gateway
 
 The Istio package we downloaded contains a script we can use to generate the YAML that will deploy an Istio operator that creates the new gateway called `istio-eastwestgateway`.
 
@@ -68,7 +69,7 @@ The above resources (Gateway and VirtualService) configure the eastwest-gateway 
 
 The purpose of the eastwest-gateway in this scenario will be to allow the Istio sidecar proxy on the virtual machine to call the control plane running inside the cluster. The second role of the eastwest-gateway is in the scenarios where the VM and Kubernetes cluster are running in different networks. In that scenario, the workloads communicate to each through the eastwest-gateway.
 
-## Preparing virtual machine namespace and files
+## Prepare virtual machine namespace and files
 
 For the virtual machine workloads, we have to create a separate namespace to store the WorkloadEntry resource and any other VM workload related resources. Additionally, we will have to export the cluster environment file, token, certificate, and other files we will have to transfer to the virtual machine.
 
@@ -213,7 +214,7 @@ We'll be running the virtual machine in GCP, just like the Kubernetes cluster.
       --rules=tcp:80
     ```
 
-## Applying configuration to the Virtual Machine
+## Apply configuration to the Virtual Machine
 
 Now it's time to configure the Virtual machine. In this example, we run a simple Python HTTP server on port 80. You could configure any other service on a different port. Just make sure you configure the security and firewall rules accordingly.
 

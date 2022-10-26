@@ -32,7 +32,7 @@ nav:
   - security.md
   - traffic-shifting.md
   - circuit_breakers.md
-  - vm_workloads.md
+  - vm-workloads.md
   - Summary: summary.md
 markdown_extensions:
   - admonition
