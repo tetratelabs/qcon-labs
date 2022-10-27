@@ -154,6 +154,14 @@ Don't forget to verify that the policy is enforced.
 - Call both services again from the sleep pod and ensure communication is no longer allowed.
 - The console output should contain the message _RBAC: access denied_.
 
+## Cleanup
+
+To prevent the above authorization policies from getting in the way of further exploration in subsequent labs, delete them:
+
+```shell
+kubectl delete authorizationpolicies --all
+```
+
 ## Next
 
 In the next lab we show how to use Istio's traffic management features to upgrade the customers service with zero downtime.
