@@ -67,6 +67,24 @@ istioctl version
 
 The output should indicate that the version is {{istio.version}}.
 
+!!! tip "Turn on command completion for `istioctl`"
+
+    1. Create the folder to contain completion scripts:
+
+        ```shell
+        mkdir -p ~/.local/share/bash-completion/completions
+        ```
+
+    1. Generate the completion script:
+
+        ```shell
+        istioctl completion bash > .local/share/bash-completion/completions/istioctl
+        ```
+
+    1. Open a new shell to activate completion.
+
+    This small investment will pay for itself in the course of this workshop.
+
 With the CLI installed, proceed to install Istio to Kubernetes.
 
 ## Pre-check
