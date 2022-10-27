@@ -120,7 +120,7 @@ siege --help
 Run the following command to generate a mild load against the application.
 
 ```{.shell .language-shell}
-siege --delay=3 --concurrent=3 --time=20M http://$GATEWAY_IP/
+siege --delay=3 --concurrent=3 http://$GATEWAY_IP/
 ```
 
 !!! note

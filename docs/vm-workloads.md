@@ -324,26 +324,8 @@ Confirm that the `customer` workload is accessible from the Kubernetes cluster.
 
 ## Access services from the VM
 
-Deploy a "Hello world" application to the Kubernetes cluster:
-
-??? note "Click for hello-world.yaml"
-
-    ```yaml linenums="1" title="hello-world.yaml"
-    --8<-- "vm-workloads/hello-world.yaml"
-    ```
-
-Save the above YAML to `hello-world.yaml` and deploy it:
+Try to access the `helloworld` service running on Kubernetes _from the VM_:
 
 ```shell
-kubectl apply -f hello-world.yaml
-```
-
-Wait for the Pods to become ready and, from the VM, try to access the Kubernetes service:
-
-```shell
-curl http://hello-world.default
-```
-
-```console
-Hello World
+curl http://helloworld.default:5000/hello
 ```
