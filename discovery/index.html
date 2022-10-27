@@ -329,7 +329,14 @@
     Clusters and endpoints
   </a>
   
-    <nav class="md-nav" aria-label="Clusters and endpoints">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-the-helloworld-sample" class="md-nav__link">
+    Deploy the helloworld sample
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy the helloworld sample">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -354,26 +361,6 @@
         <li class="md-nav__item">
   <a href="#load-balancing" class="md-nav__link">
     Load balancing
-  </a>
-  
-    <nav class="md-nav" aria-label="Load balancing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#check-the-logs" class="md-nav__link">
-    Check the logs
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#destination-rules" class="md-nav__link">
-    Destination Rules
   </a>
   
 </li>
@@ -522,7 +509,14 @@
     Clusters and endpoints
   </a>
   
-    <nav class="md-nav" aria-label="Clusters and endpoints">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-the-helloworld-sample" class="md-nav__link">
+    Deploy the helloworld sample
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy the helloworld sample">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -549,26 +543,6 @@
     Load balancing
   </a>
   
-    <nav class="md-nav" aria-label="Load balancing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#check-the-logs" class="md-nav__link">
-    Check the logs
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#destination-rules" class="md-nav__link">
-    Destination Rules
-  </a>
-  
 </li>
       
     </ul>
@@ -593,117 +567,69 @@
 
 <h1 id="service-discovery-and-load-balancing">Service discovery and load balancing<a class="headerlink" href="#service-discovery-and-load-balancing" title="Permanent link">&para;</a></h1>
 <p>This lab explores service discovery and load balancing in Istio.</p>
-<p>You will begin by spying on Istio and the Envoy configuration of the sidecars to confirm that workloads are indeed configured by Istio to know about other services and their endpoints.
-The <code>istioctl</code> CLI's two diagnostic commands <code>proxy-status</code> and <code>proxy-config</code> will be of assistance for this purpose.</p>
-<p>Next, you will scale the <code>customers</code> service to two replicas in order to witness and confirm that clients indeed load-balance requests across a target service's endpoints.</p>
-<p>Finally, you will apply a destination rule to alter the load balancing algorithm used to call the <code>customers</code> service.</p>
 <h2 id="clusters-and-endpoints">Clusters and endpoints<a class="headerlink" href="#clusters-and-endpoints" title="Permanent link">&para;</a></h2>
+<p>The <code>istioctl</code> CLI's diagnostic command <code>proxy-status</code> provides a simple way to list all proxies that Istio knows about.</p>
 <p>Confirm that <code>istiod</code> knows about the workloads running on Kubernetes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>istioctl proxy-status
 </code></pre></div>
+<h2 id="deploy-the-helloworld-sample">Deploy the <code>helloworld</code> sample<a class="headerlink" href="#deploy-the-helloworld-sample" title="Permanent link">&para;</a></h2>
+<p>The Istio distribution comes with a sample application "helloworld".</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span> ~/istio-1.15.2
+</code></pre></div>
+<p>Deploy <code>helloworld</code> to the default namespace.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl apply -f samples/helloworld/helloworld.yaml
+</code></pre></div>
+<p>Check the output of <code>proxy-status</code> again, and confirm that <code>helloworld</code> is listed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>istioctl proxy-status
+</code></pre></div>
 <h3 id="the-service-registry">The service registry<a class="headerlink" href="#the-service-registry" title="Permanent link">&para;</a></h3>
-<p>Istio maintains an internal service registry which can be observed through a debug endpoint, as follows:</p>
+<p>Istio maintains an internal service registry which can be observed through a debug endpoint <code>/debug/registryz</code> exposed by <code>istiod</code>:</p>
 <ol>
 <li>
-<p>Capture the name of the istiod pod to an environment variable</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span> <span class="nv">ISTIO_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -n istio-system -l <span class="nv">app</span><span class="o">=</span>istiod -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
+<p>Capture the name of the <code>istiod</code> pod to an environment variable</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span> <span class="nv">ISTIO_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -n istio-system -l <span class="nv">app</span><span class="o">=</span>istiod -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
 </code></pre></div>
 </li>
 <li>
 <p><code>curl</code> the registry endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl <span class="nb">exec</span> -n istio-system <span class="nv">$ISTIO_POD</span> -- curl localhost:15014/debug/registryz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl <span class="nb">exec</span> -n istio-system <span class="nv">$ISTIO_POD</span> -- curl localhost:15014/debug/registryz
 </code></pre></div>
 <p>The output can be prettified with a tool such as <a href="https://stedolan.github.io/jq/" target="_blank"><code>jq</code></a>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl <span class="nb">exec</span> -n istio-system <span class="nv">$ISTIO_POD</span> -- curl localhost:15014/debug/registryz <span class="p">|</span> jq .<span class="o">[]</span>.hostname
+</code></pre></div>
 </li>
 </ol>
 <h3 id="the-sidecar-configuration">The sidecar configuration<a class="headerlink" href="#the-sidecar-configuration" title="Permanent link">&para;</a></h3>
 <p>Review the deployments in the <code>default</code> namespace:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl get deploy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl get deploy
 </code></pre></div>
+<p>The <code>istioctl</code> CLI's diagnostic command <code>proxy-config</code> will help us inspect the configuration of proxies.</p>
 <p>Envoy's term for a service is "cluster".</p>
-<p>Confirm that <code>web-frontend</code> knows about other services, including the <code>customers</code> service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>istioctl proxy-config clusters deploy/web-frontend
+<p>Confirm that <code>sleep</code> knows about other services (<code>helloworld</code>, <code>customers</code>, etc..):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>istioctl proxy-config clusters deploy/sleep
 </code></pre></div>
 <p>List the endpoints backing each "cluster":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>istioctl proxy-config endpoints deploy/web-frontend
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>istioctl proxy-config endpoints deploy/sleep
+</code></pre></div>
+<p>Zero in on the endpoints for the <code>helloworld</code> service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>istioctl proxy-config endpoints deploy/sleep <span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  --cluster <span class="s2">&quot;outbound|5000||helloworld.default.svc.cluster.local&quot;</span>
 </code></pre></div>
 <h2 id="load-balancing">Load balancing<a class="headerlink" href="#load-balancing" title="Permanent link">&para;</a></h2>
-<p>Zero in on the endpoints for the <code>customers</code> service, and note the <code>customers</code> endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>istioctl proxy-config endpoints deploy/web-frontend --cluster <span class="s2">&quot;outbound|80||customers.default.svc.cluster.local&quot;</span>
-</code></pre></div>
-<p>Scale <code>customers</code> to two replicas:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl scale deploy customers-v1 --replicas <span class="m">2</span>
-</code></pre></div>
-<p>Re-run the above <code>proxy-config endpoints</code> command; you should now see two endpoints:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>istioctl proxy-config endpoints deploy/web-frontend --cluster <span class="s2">&quot;outbound|80||customers.default.svc.cluster.local&quot;</span>
-</code></pre></div>
-<h3 id="check-the-logs">Check the logs<a class="headerlink" href="#check-the-logs" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p>Capture the name of each <code>customers</code> workload in environment variables:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">CUSTOMERS_POD_1</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>customers -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
-</code></pre></div>
-<p>And:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">CUSTOMERS_POD_2</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>customers -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[1].metadata.name}&#39;</span><span class="k">)</span>
-</code></pre></div>
-</li>
-<li>
-<p>Tail the logs of each customers pods in two separate terminals:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kubectl logs --follow <span class="nv">$CUSTOMERS_POD_1</span>
-</code></pre></div>
-<p>And:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl logs --follow <span class="nv">$CUSTOMERS_POD_2</span>
-</code></pre></div>
-</li>
-</ol>
-<p>The <code>sleep</code> pod's container image has <code>curl</code> pre-installed.  <code>sleep</code>, like <code>web-frontend</code>, also knows about the <code>customers</code> service endpoints.</p>
+<p>The <code>sleep</code> pod's container image has <code>curl</code> pre-installed.</p>
 <ol>
 <li>
 <p>Capture the name of the sleep pod in an environment variable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
 </code></pre></div>
 </li>
 <li>
-<p>Make repeated calls to the <code>customers</code> service from the <code>sleep</code> pod:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s customers
+<p>Make repeated calls to the <code>helloworld</code> service from the <code>sleep</code> pod:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s helloworld:5000/hello
 </code></pre></div>
 </li>
 </ol>
-<p>Watch the log output from both <code>customers</code> pods and confirm that calls are indeed load-balanced.</p>
-<h2 id="destination-rules">Destination Rules<a class="headerlink" href="#destination-rules" title="Permanent link">&para;</a></h2>
-<p>Explore applying a <a href="https://istio.io/latest/docs/reference/config/networking/destination-rule/" target="_blank">DestinationRule</a>
-CRD (Custom Resource Definition) to to alter the load balancer configuration.</p>
-<p>Apply the following resource, which sets the load balancing algorithm to the <code>customers</code> service to <a href="https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB" target="_blank"><code>LEAST_REQUEST</code></a>:</p>
-<div class="admonition tldr">
-<p class="admonition-title">destination-rule.yaml</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-15-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-15-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-15-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-15-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-15-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-15-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-15-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-15-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-15-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="nn">---</span><span class="w"></span>
-<a id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
-<a id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
-<a id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers-trafficpolicy</span><span class="w"></span>
-<a id="__codelineno-15-6" name="__codelineno-15-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">customers.default.svc.cluster.local</span><span class="w"></span>
-<a id="__codelineno-15-8" name="__codelineno-15-8"></a><span class="w">  </span><span class="nt">trafficPolicy</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-15-9" name="__codelineno-15-9"></a><span class="w">    </span><span class="nt">loadBalancer</span><span class="p">:</span><span class="w"></span>
-<a id="__codelineno-15-10" name="__codelineno-15-10"></a><span class="w">      </span><span class="nt">simple</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEAST_REQUEST</span><span class="w"></span>
-</code></pre></div></td></tr></table></div>
-</div>
-<p>In Envoy, the load balancer policy is associated to a given upstream service, in Envoy's terms, it's in the "cluster" config.</p>
-<p>Look for <code>lbPolicy</code> field in cluster configuration YAML output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>istioctl proxy-config cluster <span class="nv">$SLEEP_POD</span> <span class="se">\</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  --fqdn customers.default.svc.cluster.local -o yaml <span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  <span class="p">|</span> grep lbPolicy -B <span class="m">5</span> -A <span class="m">3</span>
-</code></pre></div>
-<p>In the output, confirm that the value of <code>lbPolicy</code> is <code>LEAST_REQUEST</code>.</p>
+<p>Some responses will be from <code>helloworld-v1</code> while others from <code>helloworld-v2</code>, an indication that Envoy is load-balancing requests between these two endpoints.</p>
 
 
 
