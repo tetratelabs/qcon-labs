@@ -431,6 +431,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    Cleanup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next" class="md-nav__link">
     Next
   </a>
@@ -589,6 +596,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    Cleanup
+  </a>
   
 </li>
       
@@ -790,6 +804,10 @@ This is called <em>permissive mode</em> and is specifically designed to allow se
 <li>Call both services again from the sleep pod and ensure communication is no longer allowed.</li>
 <li>The console output should contain the message <em>RBAC: access denied</em>.</li>
 </ul>
+<h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
+<p>To prevent the above authorization policies from getting in the way of further exploration in subsequent labs, delete them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl delete authorizationpolicies --all
+</code></pre></div>
 <h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>
 <p>In the next lab we show how to use Istio's traffic management features to upgrade the customers service with zero downtime.</p>
 
