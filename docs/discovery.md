@@ -4,6 +4,8 @@ This lab explores service discovery and load balancing in Istio.
 
 ## Clusters and endpoints
 
+The `istioctl` CLI's diagnostic command `proxy-status` provides a simple way to list all proxies that Istio knows about.
+
 Confirm that `istiod` knows about the workloads running on Kubernetes:
 
 ```shell
@@ -59,6 +61,8 @@ Review the deployments in the `default` namespace:
 ```shell
 kubectl get deploy
 ```
+
+The `istioctl` CLI's diagnostic command `proxy-config` will help us inspect the configuration of proxies.
 
 Envoy's term for a service is "cluster".
 
