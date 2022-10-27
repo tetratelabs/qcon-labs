@@ -68,6 +68,10 @@ Alternatives:
 
 1. Install from source. It's a little more work, but does not exhibit the above-mentioned problem.
 1. Run the load generator from your laptop.  On a mac, using homebrew the command is `brew install siege`.
+1. Use a simple bash `curl` command wrapped in a `while` loop:
+    ```shell
+    while true; do curl $GATEWAY_IP | head; sleep 1s; done
+    ```
 
 Here are the steps to install from source:
 
