@@ -313,13 +313,7 @@ Confirm that the `customer` workload is accessible from the Kubernetes cluster.
 1. Call `customers` directly from `sleep`:
 
     ```shell
-    SLEEP_POD=$(kubectl get pod -l app=sleep -ojsonpath='{.items[0].metadata.name}')
-    ```
-
-    Then:
-
-    ```shell
-    kubectl exec $SLEEP_POD -- curl -s customers
+    kubectl exec deploy/sleep -- curl -s customers
     ```
 
 ## Access services from the VM
