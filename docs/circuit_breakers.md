@@ -52,16 +52,11 @@ We'll use [Fortio](https://fortio.org/){target=_blank} to generate load on the `
 1. Make a single request to make sure everything is working:
 
     ```shell
-    export FORTIO_POD=$(kubectl get pods -l app=fortio -o 'jsonpath={.items[0].metadata.name}')
+    kubectl exec deploy/fortio-deploy -c fortio -- \
+      /usr/bin/fortio curl web-frontend
     ```
 
-    Then:
-
-    ```shell
-    kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio curl http://web-frontend
-    ```
-
-    The output should resemble this:
+    The tail of the output should resemble this:
 
     ```console
     ...
@@ -98,10 +93,11 @@ Since all values are set to 1, we won't trigger the circuit breaker if we send t
 
 If we increase the number of connections and send more requests (i.e. 2 workers sending requests concurrently, and sending 50 requests), we'll start getting errors.
 
-The errors happen because the `http2MaxRequests` is set to 1 and we have more than 1 concurrent request being sent. Additonally, we're exceeding the `maxRequestsPerConnection` limit.
+The errors happen because the `http2MaxRequests` is set to 1 and we have more than 1 concurrent request being sent. Additionally, we're exceeding the `maxRequestsPerConnection` limit.
 
 ```shell
-kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning http://web-frontend
+kubectl exec deploy/fortio-deploy -c fortio -- \
+  /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning web-frontend
 ```
 
 ```console
@@ -112,7 +108,7 @@ Code 503 : 26 (52.0 %)
 
 !!! Tip
 
-    To reset the metric counters, run `kubectl exec $FORTIO_POD -c istio-proxy -- curl -X POST localhost:15000/reset_counters`
+    To reset the metric counters, run `kubectl exec deploy/fortio-deploy -c istio-proxy -- curl -X POST localhost:15000/reset_counters`
 
 ## Observe failures in Zipkin
 
@@ -154,7 +150,8 @@ The query shows the metrics for requests originating from the `fortio` app and g
 We can also look at the metrics directly from the `istio-proxy` container in the Fortio Pod:
 
 ```shell
-kubectl exec "$FORTIO_POD" -c istio-proxy -- pilot-agent request GET stats | grep web-frontend | grep pending
+kubectl exec deploy/fortio-deploy -c istio-proxy -- \
+  pilot-agent request GET stats | grep web-frontend | grep pending
 ```
 
 ```console
@@ -195,7 +192,8 @@ kubectl apply -f cb-web-frontend.yaml
 If we re-run Fortio with the same parameters, we'll notice less failures this time:
 
 ```shell
-kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning http://web-frontend
+kubectl exec deploy/fortio-deploy -c fortio -- \
+  /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning web-frontend
 ```
 
 ```console
@@ -227,7 +225,7 @@ Save the above YAML to `cb-web-frontend.yaml` and apply the changes:
 kubectl apply -f cb-web-frontend.yaml
 ```
 
-If we re-run Fortio this time, we'll get zero or close to zero HTTP 503 reponses. Even if we increase the number of requests per second, we should only get a small number of 503 responses. To get rid of the remaining failing requests, we can increase the `http1MaxPendingRequests` to 2:
+If we re-run Fortio this time, we'll get zero or close to zero HTTP 503 responses. Even if we increase the number of requests per second, we should only get a small number of 503 responses. To get rid of the remaining failing requests, we can increase the `http1MaxPendingRequests` to 2:
 
 ```yaml linenums="1" hl_lines="10"
 apiVersion: networking.istio.io/v1alpha3
@@ -257,7 +255,8 @@ kubectl delete destinationrule web-frontend
 Reset the metric counters:
 
 ```shell
-kubectl exec $FORTIO_POD -c istio-proxy -- curl -X POST localhost:15000/reset_counters
+kubectl exec deploy/fortio-deploy -c istio-proxy -- \
+  curl -X POST localhost:15000/reset_counters
 ```
 
 ## Outlier detection
@@ -285,7 +284,8 @@ kubectl apply -f web-frontend-failing.yaml
 If we run Fortio we'll see that majority of the requests will be failing. That's because the `web-frontend-failing` deployment has more replicas than the "good" deployment.
 
 ```shell
-kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning http://web-frontend
+kubectl exec deploy/fortio-deploy -c fortio -- \
+  /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning web-frontend
 ```
 
 ```console
@@ -314,7 +314,8 @@ kubectl apply -f outlier-web-frontend.yaml
 If we repeat the test, we might get a similar distribution of responses the first time, however, if we repeat the command again (once the outliers were kicked out), we'll get a much better distribution:
 
 ```shell
-kubectl exec "$FORTIO_POD" -c fortio -- /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning http://web-frontend
+kubectl exec deploy/fortio-deploy -c fortio -- \
+  /usr/bin/fortio load -c 2 -qps 0 -n 50 -loglevel Warning web-frontend
 ```
 
 ```console
@@ -327,7 +328,8 @@ The reason for more HTTP 200 responses is because as soon as the failing hosts w
 We can also look at the metrics from the outlier detection in the same way we did for the circuit breakers:
 
 ```shell
-kubectl exec "$FORTIO_POD" -c istio-proxy -- pilot-agent request GET stats | grep web-frontend | grep ejections_total
+kubectl exec deploy/fortio-deploy -c istio-proxy -- \
+  pilot-agent request GET stats | grep web-frontend | grep ejections_total
 ```
 
 Produces output similar to this:
@@ -336,8 +338,8 @@ Produces output similar to this:
 cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ejections_total: 4
 ```
 
-??? Note
-    Other metrics that we can look at are `ejections_consecutive_5xx`,  `ejections_enforced_total` or any other metric with `outlier_detection` in its name. You can find the full list of metric names and there descriptions in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection).
+!!! Note
+    Other metrics that we can look at are `ejections_consecutive_5xx`, `ejections_enforced_total` or any other metric with `outlier_detection` in its name. You can find the full list of metric names and there descriptions in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection).
 
 ## Cleanup
 
