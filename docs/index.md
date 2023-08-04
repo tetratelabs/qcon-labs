@@ -1,6 +1,6 @@
 # Welcome!
 
-Welcome to the QCon 2022 Istio service mesh workshop!
+Welcome to the QCon 2023 Istio service mesh workshop!
 
 On this site you will find the hands-on labs for the workshop.
 
