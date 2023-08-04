@@ -889,7 +889,7 @@ The canonical example is a legacy application that, for some reason, is not cont
 </li>
 <li>
 <p>Download and install the Istio sidecar package:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.18.2/deb/istio-sidecar.deb
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo dpkg -i istio-sidecar.deb
 </code></pre></div>
 </li>
@@ -958,16 +958,13 @@ The canonical example is a legacy application that, for some reason, is not cont
 </li>
 <li>
 <p>Call <code>customers</code> directly from <code>sleep</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
-</code></pre></div>
-<p>Then:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s customers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl <span class="nb">exec</span> deploy/sleep -- curl -s customers
 </code></pre></div>
 </li>
 </ol>
 <h2 id="access-services-from-the-vm">Access services from the VM<a class="headerlink" href="#access-services-from-the-vm" title="Permanent link">&para;</a></h2>
 <p>Try to access the <code>helloworld</code> service running on Kubernetes <em>from the VM</em>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl http://helloworld.default:5000/hello
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>curl http://helloworld.default:5000/hello
 </code></pre></div>
 
 

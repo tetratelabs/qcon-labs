@@ -550,7 +550,7 @@
 <p>Once the installation completes, we can deploy a separate ingress gateway that will be used to expose the Istio's control plane to the virtual machine.</p>
 <h2 id="install-and-configure-the-east-west-gateway">Install and configure the east-west gateway<a class="headerlink" href="#install-and-configure-the-east-west-gateway" title="Permanent link">&para;</a></h2>
 <p>The Istio package we downloaded contains a script we can use to generate the YAML that will deploy an Istio operator that creates the new gateway called <code>istio-eastwestgateway</code>.</p>
-<p>Go to the folder where you downloaded Istio (e.g. <code>istio-1.15.2</code>) and run this script:</p>
+<p>Go to the folder where you downloaded Istio (e.g. <code>istio-1.18.2</code>) and run this script:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>samples/multicluster/gen-eastwest-gateway.sh --single-cluster <span class="p">|</span> istioctl install -y -f -
 </code></pre></div>
 <p>You can list the Pods in the <code>istio-system</code> namespaces to check the gateway that was installed:</p>
@@ -701,7 +701,7 @@
 </li>
 <li>
 <p>Download and install the Istio sidecar package:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.15.2/deb/istio-sidecar.deb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>curl -LO https://storage.googleapis.com/istio-release/releases/1.18.2/deb/istio-sidecar.deb
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>sudo dpkg -i istio-sidecar.deb
 </code></pre></div>
 </li>

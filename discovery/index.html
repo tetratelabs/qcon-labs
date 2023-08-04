@@ -574,7 +574,7 @@
 </code></pre></div>
 <h2 id="deploy-the-helloworld-sample">Deploy the <code>helloworld</code> sample<a class="headerlink" href="#deploy-the-helloworld-sample" title="Permanent link">&para;</a></h2>
 <p>The Istio distribution comes with a sample application "helloworld".</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span> ~/istio-1.15.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span> ~/istio-1.18.2
 </code></pre></div>
 <p>Deploy <code>helloworld</code> to the default namespace.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl apply -f samples/helloworld/helloworld.yaml
@@ -586,49 +586,35 @@
 <p>Istio maintains an internal service registry which can be observed through a debug endpoint <code>/debug/registryz</code> exposed by <code>istiod</code>:</p>
 <ol>
 <li>
-<p>Capture the name of the <code>istiod</code> pod to an environment variable</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span> <span class="nv">ISTIO_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -n istio-system -l <span class="nv">app</span><span class="o">=</span>istiod -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
-</code></pre></div>
-</li>
-<li>
 <p><code>curl</code> the registry endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl <span class="nb">exec</span> -n istio-system <span class="nv">$ISTIO_POD</span> -- curl localhost:15014/debug/registryz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz
 </code></pre></div>
 <p>The output can be prettified with a tool such as <a href="https://stedolan.github.io/jq/" target="_blank"><code>jq</code></a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl <span class="nb">exec</span> -n istio-system <span class="nv">$ISTIO_POD</span> -- curl localhost:15014/debug/registryz <span class="p">|</span> jq .<span class="o">[]</span>.hostname
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz <span class="p">|</span> jq .<span class="o">[]</span>.hostname
 </code></pre></div>
 </li>
 </ol>
 <h3 id="the-sidecar-configuration">The sidecar configuration<a class="headerlink" href="#the-sidecar-configuration" title="Permanent link">&para;</a></h3>
 <p>Review the deployments in the <code>default</code> namespace:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl get deploy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl get deploy
 </code></pre></div>
 <p>The <code>istioctl</code> CLI's diagnostic command <code>proxy-config</code> will help us inspect the configuration of proxies.</p>
 <p>Envoy's term for a service is "cluster".</p>
 <p>Confirm that <code>sleep</code> knows about other services (<code>helloworld</code>, <code>customers</code>, etc..):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>istioctl proxy-config clusters deploy/sleep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>istioctl proxy-config clusters deploy/sleep
 </code></pre></div>
 <p>List the endpoints backing each "cluster":</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>istioctl proxy-config endpoints deploy/sleep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>istioctl proxy-config endpoints deploy/sleep
 </code></pre></div>
 <p>Zero in on the endpoints for the <code>helloworld</code> service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>istioctl proxy-config endpoints deploy/sleep <span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  --cluster <span class="s2">&quot;outbound|5000||helloworld.default.svc.cluster.local&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>istioctl proxy-config endpoints deploy/sleep <span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  --cluster <span class="s2">&quot;outbound|5000||helloworld.default.svc.cluster.local&quot;</span>
 </code></pre></div>
 <h2 id="load-balancing">Load balancing<a class="headerlink" href="#load-balancing" title="Permanent link">&para;</a></h2>
 <p>The <code>sleep</code> pod's container image has <code>curl</code> pre-installed.</p>
-<ol>
-<li>
-<p>Capture the name of the sleep pod in an environment variable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">SLEEP_POD</span><span class="o">=</span><span class="k">$(</span>kubectl get pod -l <span class="nv">app</span><span class="o">=</span>sleep -ojsonpath<span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>
-</code></pre></div>
-</li>
-<li>
 <p>Make repeated calls to the <code>helloworld</code> service from the <code>sleep</code> pod:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl <span class="nb">exec</span> <span class="nv">$SLEEP_POD</span> -- curl -s helloworld:5000/hello
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl <span class="nb">exec</span> deploy/sleep -- curl -s helloworld:5000/hello
 </code></pre></div>
-</li>
-</ol>
 <p>Some responses will be from <code>helloworld-v1</code> while others from <code>helloworld-v2</code>, an indication that Envoy is load-balancing requests between these two endpoints.</p>
 
 
