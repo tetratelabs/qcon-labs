@@ -8,10 +8,10 @@ To explore [onboarding VM workloads with Istio](https://istio.io/latest/docs/ops
 In this lab, you will:
 
 1. Enable [VM] workload entry auto-registration (a feature considered experimental at time of writing)
-1. Provision a VM and deploy the `customers` app on it.
+1. Provision a VM and deploy the `customers` app to it.
 1. Enable data-plane communication between the VM workload and the mesh
 1. Configure control-plane communication between `istiod` and the VM
-1. Define a WorkloadGroup, a concept analogous to Kubernetes [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/){target=_blank} resource
+1. Define a [WorkloadGroup](https://istio.io/latest/docs/reference/config/networking/workload-group/){target=_blank}, a concept analogous to Kubernetes [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/){target=_blank} resource
 1. Install and configure the Envoy sidecar on the VM
 
 The fruit of this labor will be to witness the `web-frontend` service successfully make calls to the `customers` backend running on the VM.
@@ -190,9 +190,9 @@ Here is how each file is described in the [Istio documentation](https://istio.io
 
 !!! info
 
-    To onboard the VM workload the sidecar also nees the Istio mTLS certificate. When the sidcear starts it uses the `istio-token` file to prove its identity to Istio control plane and to obtain the Istio mTLS certificate. The mTLS certificate is stored on disk for cases when the VM restarts.
+    To onboard the VM workload, the sidecar also needs the Istio mTLS certificate. When the sidecar starts, it uses the `istio-token` file to prove its identity to Istio control plane and to obtain the Istio mTLS certificate. The mTLS certificate is stored on disk for cases when the VM restarts.
 
-    The expiration time on the initial `istio-token` is 1 hour. If it takes you longer than 1 hour to onboard the VM, you' ll need to re-run the `istioctl x workload entry configure` command to generate a new token.
+    The expiration time on the initial `istio-token` is one hour.  If more than one hour passes before onboarding the VM, you'll need to re-run the `istioctl x workload entry configure` command to generate a new token.
 
     Once the VM obtains the mTLS certificate, it can use it to prove its identity. The certificate is valid for 24 hours and is automatically rotated before it expires.
 
