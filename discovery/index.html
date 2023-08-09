@@ -587,10 +587,12 @@
 <ol>
 <li>
 <p><code>curl</code> the registry endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- <span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  curl localhost:15014/debug/registryz
 </code></pre></div>
 <p>The output can be prettified with a tool such as <a href="https://stedolan.github.io/jq/" target="_blank"><code>jq</code></a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz <span class="p">|</span> jq .<span class="o">[]</span>.hostname
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl <span class="nb">exec</span> -n istio-system deploy/istiod -- <span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  curl localhost:15014/debug/registryz <span class="p">|</span> jq .<span class="o">[]</span>.hostname
 </code></pre></div>
 </li>
 </ol>
