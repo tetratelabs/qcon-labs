@@ -39,13 +39,15 @@ Istio maintains an internal service registry which can be observed through a deb
 1. `curl` the registry endpoint:
 
     ```shell
-    kubectl exec -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz
+    kubectl exec -n istio-system deploy/istiod -- \
+      curl localhost:15014/debug/registryz
     ```
 
     The output can be prettified with a tool such as [`jq`](https://stedolan.github.io/jq/){target=_blank}.
 
     ```shell
-    kubectl exec -n istio-system deploy/istiod -- curl localhost:15014/debug/registryz | jq .[].hostname
+    kubectl exec -n istio-system deploy/istiod -- \
+      curl localhost:15014/debug/registryz | jq .[].hostname
     ```
 
 ### The sidecar configuration
