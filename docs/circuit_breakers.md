@@ -9,7 +9,7 @@ This lab demonstrate how to configure [circuit breaking](https://www.envoyproxy.
 
 ## Collect additional metrics
 
-Modify the installation of Istio to enable collection of additional metrics:
+Modify the installation of Istio to use the [demo profile](https://istio.io/latest/docs/setup/additional-setup/config-profiles/){target=_blank} and to enable collection of additional metrics:
 
 ```yaml linenums="1" title="istio-metrics.yaml"
 --8<-- "circuit-breakers/istio-metrics.yaml"
@@ -121,7 +121,7 @@ istioctl dash zipkin
 In the Zipkin UI, click the **Run Query** button and pick a failing trace to see the details.
 You can identify failing traces by looking at the number of spans - the failing trace will have 1 span, while the successful ones will have 4 spans.
 
-The requests are failing because the circuit breaker is tripped.  Response flags are set to `UO` (Upstream Overflow) and the status code is 503 (service unavailable).
+The requests are failing because the circuit breaker is tripped.  [Response flags](https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#config-access-log-format-response-flags){target=_blank} are set to `UO` (Upstream Overflow) and the status code is 503 (service unavailable).
 
 ![Zipkin 503s](zipkin-503.png)
 
@@ -281,7 +281,7 @@ Save the above YAML to `web-frontend-failing.yaml` and apply it to the cluster:
 kubectl apply -f web-frontend-failing.yaml
 ```
 
-If we run Fortio we'll see that majority of the requests will be failing. That's because the `web-frontend-failing` deployment has more replicas than the "good" deployment.
+If we run Fortio we'll see that majority (roughly, 80%) of the requests will be failing. That's because the `web-frontend-failing` deployment has more replicas than the "good" deployment.
 
 ```shell
 kubectl exec deploy/fortio-deploy -c fortio -- \
@@ -311,7 +311,7 @@ Save the YAML to `outlier-web-frontend.yaml` and apply it:
 kubectl apply -f outlier-web-frontend.yaml
 ```
 
-If we repeat the test, we might get a similar distribution of responses the first time, however, if we repeat the command again (once the outliers were kicked out), we'll get a much better distribution:
+If we repeat the test, we might get a similar distribution of responses the first time.  However, if we repeat the command (once the outliers were ejected), we'll get a much better distribution:
 
 ```shell
 kubectl exec deploy/fortio-deploy -c fortio -- \
@@ -323,7 +323,7 @@ kubectl exec deploy/fortio-deploy -c fortio -- \
 Code 200 : 50 (100.0 %)
 ```
 
-The reason for more HTTP 200 responses is because as soon as the failing hosts were ejected (failing Pods from the `web-frontend-failing` deployment), the requests were sent to the other host that doesn't fail. If we'd wait for a while (the 60s `baseEjectionTime`), the failing hosts would be brought back into the load balancing pool and we'd get a similar distribution of responses as before (majority of them failing).
+The reason for more HTTP 200 responses is because as soon as the failing hosts were ejected (failing Pods from the `web-frontend-failing` deployment), the requests were sent to the other host that doesn't fail. If we waited until after the 60 second `baseEjectionTime` expired, the failing hosts would be brought back into the load balancing pool and we'd get a similar distribution of responses as before (majority of them failing).
 
 We can also look at the metrics from the outlier detection in the same way we did for the circuit breakers:
 
@@ -339,17 +339,14 @@ cluster.outbound|80||web-frontend.default.svc.cluster.local.outlier_detection.ej
 ```
 
 !!! Note
-    Other metrics that we can look at are `ejections_consecutive_5xx`, `ejections_enforced_total` or any other metric with `outlier_detection` in its name. You can find the full list of metric names and there descriptions in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection).
+    Other metrics that we can look at are `ejections_consecutive_5xx`, `ejections_enforced_total` or any other metric with `outlier_detection` in its name. The full list of metric names and their descriptions can be found in the [Envoy documentation](https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection){target=_blank}.
 
 ## Cleanup
 
-To clean up all resources, run:
+To clean up resources created in this lab, run:
 
 ```shell
+kubectl delete destinationrule web-frontend
 kubectl delete -f web-frontend-failing.yaml
-kubectl delete -f cb-lab.yaml
 kubectl delete -f fortio.yaml
-kubectl delete dr --all
-kubectl delete vs --all
-kubectl delete gateway --all
 ```
