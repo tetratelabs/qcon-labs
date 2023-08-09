@@ -1,4 +1,4 @@
-# Service discovery and load balancing
+# Service discovery, load balancing, and routing
 
 This lab explores service discovery and load balancing in Istio.
 
@@ -32,7 +32,7 @@ Check the output of `proxy-status` again, and confirm that `helloworld` is liste
 istioctl proxy-status
 ```
 
-### The service registry
+## The service registry
 
 Istio maintains an internal service registry which can be observed through a debug endpoint `/debug/registryz` exposed by `istiod`:
 
@@ -50,7 +50,7 @@ Istio maintains an internal service registry which can be observed through a deb
       curl localhost:15014/debug/registryz | jq .[].hostname
     ```
 
-### The sidecar configuration
+## The sidecar configuration
 
 Review the deployments in the `default` namespace:
 
@@ -92,3 +92,79 @@ kubectl exec deploy/sleep -- curl -s helloworld:5000/hello
 ```
 
 Some responses will be from `helloworld-v1` while others from `helloworld-v2`, an indication that Envoy is load-balancing requests between these two endpoints.
+
+Envoy does not use the ClusterIP service.  It performs client-side load-balancing using the endpoints you resolved above.
+
+To influence the load balancing algorithm Envoy uses when calling `helloworld`, we can define a traffic policy.
+
+```yaml linenums="1" title="helloworld-lb.yaml"
+--8<-- "discovery/helloworld-lb.yaml"
+```
+
+Apply the above traffic policy to the cluster:
+
+```shell
+kubectl apply -f helloworld-lb.yaml
+```
+
+!!! Tip
+
+    We highly recommend the follow blog entry on the Envoy Proxy blog about [Examining Load Balancing Algorithms with Envoy](https://blog.envoyproxy.io/examining-load-balancing-algorithms-with-envoy-1be643ea121c){target=_blank}
+
+
+We can examine the `helloworld` "cluster" definition in a sample client and note that the specified load balancing policy has been applied:
+
+```shell
+istioctl proxy-config cluster deploy/sleep \
+  --fqdn helloworld.default.svc.cluster.local -o yaml | grep lbPolicy
+```
+
+## Routing
+
+We can go a step further and control how much traffic to send to version v1 and how much to v2.
+
+First we define the two subsets, v1 and v2:
+
+```yaml linenums="1" title="helloworld-dr.yaml"
+--8<-- "discovery/helloworld-dr.yaml"
+```
+
+Apply the updated destination rule to the cluster:
+
+```shell
+kubectl apply -f helloworld-dr.yaml
+```
+
+If we now inspect the list of clusters, note that there's one for each subset:
+
+```shell
+istioctl proxy-config cluster deploy/sleep --fqdn helloworld.default.svc.cluster.local
+```
+
+With the subsets defined, we turn our attention to the routing specification.  We use a [VirtualService](https://istio.io/latest/docs/reference/config/networking/virtual-service/), in this case to direct 25% of traffic to v1 and 75% to v2:
+
+```yaml linenums="1" title="helloworld-vs.yaml"
+--8<-- "discovery/helloworld-vs.yaml"
+```
+
+Apply the VirtualService to the cluster:
+
+```shell
+kubectl apply -f helloworld-vs.yaml
+```
+
+Finally, we can inspect the routing rules applied to an Envoy client with our `proxy-config` diagnostic command:
+
+```shell
+istioctl proxy-config routes deploy/sleep --name 5000 -o yaml
+```
+
+Note the `weightedClusters` section in the routes output.
+
+The `istioctl` CLI provides a convenient command to inspect the configuration of a service:
+
+```shell
+istioctl x describe svc helloworld
+```
+
+I think you'll agree the output of the `istioctl x describe` command is a little easier to parse in comparison to previous Envoy configurations.
