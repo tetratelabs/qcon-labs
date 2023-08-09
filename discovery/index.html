@@ -13,7 +13,7 @@
     
     
       
-        <title>Service discovery and load balancing - QCon 2023 - Istio Workshop</title>
+        <title>Service discovery, load balancing, and routing - QCon 2023 - Istio Workshop</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#service-discovery-and-load-balancing" class="md-skip">
+        <a href="#service-discovery-load-balancing-and-routing" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Service discovery and load balancing
+              Service discovery, load balancing, and routing
             
           </span>
         </div>
@@ -274,21 +274,6 @@
 
   
   
-  
-    <li class="md-nav__item">
-      <a href="../the-app/" class="md-nav__link">
-        The application
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
     
   
   
@@ -301,12 +286,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Service discovery and load balancing
+          Service discovery, load balancing, and routing
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Service discovery and load balancing
+        Service discovery, load balancing, and routing
       </a>
       
         
@@ -336,25 +321,19 @@
     Deploy the helloworld sample
   </a>
   
-    <nav class="md-nav" aria-label="Deploy the helloworld sample">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-service-registry" class="md-nav__link">
     The service registry
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#the-sidecar-configuration" class="md-nav__link">
     The sidecar configuration
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -365,10 +344,32 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#routing" class="md-nav__link">
+    Routing
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-app/" class="md-nav__link">
+        The application
+      </a>
     </li>
   
 
@@ -516,31 +517,32 @@
     Deploy the helloworld sample
   </a>
   
-    <nav class="md-nav" aria-label="Deploy the helloworld sample">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-service-registry" class="md-nav__link">
     The service registry
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#the-sidecar-configuration" class="md-nav__link">
     The sidecar configuration
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#load-balancing" class="md-nav__link">
     Load balancing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing" class="md-nav__link">
+    Routing
   </a>
   
 </li>
@@ -565,7 +567,7 @@
   </a>
 
 
-<h1 id="service-discovery-and-load-balancing">Service discovery and load balancing<a class="headerlink" href="#service-discovery-and-load-balancing" title="Permanent link">&para;</a></h1>
+<h1 id="service-discovery-load-balancing-and-routing">Service discovery, load balancing, and routing<a class="headerlink" href="#service-discovery-load-balancing-and-routing" title="Permanent link">&para;</a></h1>
 <p>This lab explores service discovery and load balancing in Istio.</p>
 <h2 id="clusters-and-endpoints">Clusters and endpoints<a class="headerlink" href="#clusters-and-endpoints" title="Permanent link">&para;</a></h2>
 <p>The <code>istioctl</code> CLI's diagnostic command <code>proxy-status</code> provides a simple way to list all proxies that Istio knows about.</p>
@@ -582,7 +584,7 @@
 <p>Check the output of <code>proxy-status</code> again, and confirm that <code>helloworld</code> is listed:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>istioctl proxy-status
 </code></pre></div>
-<h3 id="the-service-registry">The service registry<a class="headerlink" href="#the-service-registry" title="Permanent link">&para;</a></h3>
+<h2 id="the-service-registry">The service registry<a class="headerlink" href="#the-service-registry" title="Permanent link">&para;</a></h2>
 <p>Istio maintains an internal service registry which can be observed through a debug endpoint <code>/debug/registryz</code> exposed by <code>istiod</code>:</p>
 <ol>
 <li>
@@ -596,7 +598,7 @@
 </code></pre></div>
 </li>
 </ol>
-<h3 id="the-sidecar-configuration">The sidecar configuration<a class="headerlink" href="#the-sidecar-configuration" title="Permanent link">&para;</a></h3>
+<h2 id="the-sidecar-configuration">The sidecar configuration<a class="headerlink" href="#the-sidecar-configuration" title="Permanent link">&para;</a></h2>
 <p>Review the deployments in the <code>default</code> namespace:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl get deploy
 </code></pre></div>
@@ -618,6 +620,130 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kubectl <span class="nb">exec</span> deploy/sleep -- curl -s helloworld:5000/hello
 </code></pre></div>
 <p>Some responses will be from <code>helloworld-v1</code> while others from <code>helloworld-v2</code>, an indication that Envoy is load-balancing requests between these two endpoints.</p>
+<p>Envoy does not use the ClusterIP service.  It performs client-side load-balancing using the endpoints you resolved above.</p>
+<p>To influence the load balancing algorithm Envoy uses when calling <code>helloworld</code>, we can define a traffic policy.</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">helloworld-lb.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-11-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-11-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-11-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-11-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-11-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-11-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-11-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-11-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-11-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld-trafficpolicy</span><span class="w"></span>
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="w">  </span><span class="nt">trafficPolicy</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-11-9" name="__codelineno-11-9"></a><span class="w">    </span><span class="nt">loadBalancer</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-11-10" name="__codelineno-11-10"></a><span class="w">      </span><span class="nt">simple</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEAST_REQUEST</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>Apply the above traffic policy to the cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl apply -f helloworld-lb.yaml
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We highly recommend the follow blog entry on the Envoy Proxy blog about <a href="https://blog.envoyproxy.io/examining-load-balancing-algorithms-with-envoy-1be643ea121c" target="_blank">Examining Load Balancing Algorithms with Envoy</a></p>
+</div>
+<p>We can examine the <code>helloworld</code> "cluster" definition in a sample client and note that the specified load balancing policy has been applied:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>istioctl proxy-config cluster deploy/sleep <span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  --fqdn helloworld.default.svc.cluster.local -o yaml <span class="p">|</span> grep lbPolicy
+</code></pre></div>
+<h2 id="routing">Routing<a class="headerlink" href="#routing" title="Permanent link">&para;</a></h2>
+<p>We can go a step further and control how much traffic to send to version v1 and how much to v2.</p>
+<p>First we define the two subsets, v1 and v2:</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">helloworld-dr.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-14-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-14-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-14-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-14-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-14-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-14-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-14-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-14-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-14-10">10</a></span>
+<span class="normal"><a href="#__codelineno-14-11">11</a></span>
+<span class="normal"><a href="#__codelineno-14-12">12</a></span>
+<span class="normal"><a href="#__codelineno-14-13">13</a></span>
+<span class="normal"><a href="#__codelineno-14-14">14</a></span>
+<span class="normal"><a href="#__codelineno-14-15">15</a></span>
+<span class="normal"><a href="#__codelineno-14-16">16</a></span>
+<span class="normal"><a href="#__codelineno-14-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1alpha3</span><span class="w"></span>
+<a id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DestinationRule</span><span class="w"></span>
+<a id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-5" name="__codelineno-14-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld-trafficpolicy</span><span class="w"></span>
+<a id="__codelineno-14-6" name="__codelineno-14-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-14-8" name="__codelineno-14-8"></a><span class="w">  </span><span class="nt">trafficPolicy</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-9" name="__codelineno-14-9"></a><span class="w">    </span><span class="nt">loadBalancer</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-10" name="__codelineno-14-10"></a><span class="w">      </span><span class="nt">simple</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LEAST_REQUEST</span><span class="w"></span>
+<a id="__codelineno-14-11" name="__codelineno-14-11"></a><span class="w">  </span><span class="nt">subsets</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-12" name="__codelineno-14-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-14-13" name="__codelineno-14-13"></a><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-14" name="__codelineno-14-14"></a><span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-14-15" name="__codelineno-14-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span><span class="w"></span>
+<a id="__codelineno-14-16" name="__codelineno-14-16"></a><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-14-17" name="__codelineno-14-17"></a><span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>Apply the updated destination rule to the cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl apply -f helloworld-dr.yaml
+</code></pre></div>
+<p>If we now inspect the list of clusters, note that there's one for each subset:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>istioctl proxy-config cluster deploy/sleep --fqdn helloworld.default.svc.cluster.local
+</code></pre></div>
+<p>With the subsets defined, we turn our attention to the routing specification.  We use a <a href="https://istio.io/latest/docs/reference/config/networking/virtual-service/">VirtualService</a>, in this case to direct 25% of traffic to v1 and 75% to v2:</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">helloworld-vs.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-17-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-17-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-17-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-17-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-17-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-17-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-17-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-17-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-17-10">10</a></span>
+<span class="normal"><a href="#__codelineno-17-11">11</a></span>
+<span class="normal"><a href="#__codelineno-17-12">12</a></span>
+<span class="normal"><a href="#__codelineno-17-13">13</a></span>
+<span class="normal"><a href="#__codelineno-17-14">14</a></span>
+<span class="normal"><a href="#__codelineno-17-15">15</a></span>
+<span class="normal"><a href="#__codelineno-17-16">16</a></span>
+<span class="normal"><a href="#__codelineno-17-17">17</a></span>
+<span class="normal"><a href="#__codelineno-17-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="nn">---</span><span class="w"></span>
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1beta1</span><span class="w"></span>
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VirtualService</span><span class="w"></span>
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="nt">metadata</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-5" name="__codelineno-17-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-routing</span><span class="w"></span>
+<a id="__codelineno-17-6" name="__codelineno-17-6"></a><span class="nt">spec</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-17-9" name="__codelineno-17-9"></a><span class="w">  </span><span class="nt">http</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-10" name="__codelineno-17-10"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-11" name="__codelineno-17-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-12" name="__codelineno-17-12"></a><span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-17-13" name="__codelineno-17-13"></a><span class="w">        </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span><span class="w"></span>
+<a id="__codelineno-17-14" name="__codelineno-17-14"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span><span class="w"></span>
+<a id="__codelineno-17-15" name="__codelineno-17-15"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-17-16" name="__codelineno-17-16"></a><span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helloworld.default.svc.cluster.local</span><span class="w"></span>
+<a id="__codelineno-17-17" name="__codelineno-17-17"></a><span class="w">        </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span><span class="w"></span>
+<a id="__codelineno-17-18" name="__codelineno-17-18"></a><span class="w">      </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">75</span><span class="w"></span>
+</code></pre></div></td></tr></table></div>
+<p>Apply the VirtualService to the cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>kubectl apply -f helloworld-vs.yaml
+</code></pre></div>
+<p>Finally, we can inspect the routing rules applied to an Envoy client with our <code>proxy-config</code> diagnostic command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>istioctl proxy-config routes deploy/sleep --name <span class="m">5000</span> -o yaml
+</code></pre></div>
+<p>Note the <code>weightedClusters</code> section in the routes output.</p>
+<p>The <code>istioctl</code> CLI provides a convenient command to inspect the configuration of a service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>istioctl x describe svc helloworld
+</code></pre></div>
+<p>I think you'll agree the output of the <code>istioctl x describe</code> command is a little easier to parse in comparison to previous Envoy configurations.</p>
 
 
 
@@ -643,7 +769,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../the-app/" class="md-footer__link md-footer__link--prev" aria-label="Previous: The application" rel="prev">
+        <a href="../sidecar-injection/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Sidecar injection" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -652,20 +778,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              The application
+              Sidecar injection
             </div>
           </div>
         </a>
       
       
         
-        <a href="../ingress/" class="md-footer__link md-footer__link--next" aria-label="Next: Ingress" rel="next">
+        <a href="../the-app/" class="md-footer__link md-footer__link--next" aria-label="Next: The application" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Ingress
+              The application
             </div>
           </div>
           <div class="md-footer__button md-icon">
