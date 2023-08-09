@@ -603,7 +603,7 @@
 <li><code>web-frontend</code> and <code>customers</code> workloads already deployed and running.</li>
 </ul>
 <h2 id="collect-additional-metrics">Collect additional metrics<a class="headerlink" href="#collect-additional-metrics" title="Permanent link">&para;</a></h2>
-<p>Modify the installation of Istio to enable collection of additional metrics:</p>
+<p>Modify the installation of Istio to use the <a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/" target="_blank">demo profile</a> and to enable collection of additional metrics:</p>
 <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">istio-metrics.yaml</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
 <span class="normal"><a href="#__codelineno-0-3">3</a></span>
@@ -790,7 +790,7 @@
 </code></pre></div>
 <p>In the Zipkin UI, click the <strong>Run Query</strong> button and pick a failing trace to see the details.
 You can identify failing traces by looking at the number of spans - the failing trace will have 1 span, while the successful ones will have 4 spans.</p>
-<p>The requests are failing because the circuit breaker is tripped.  Response flags are set to <code>UO</code> (Upstream Overflow) and the status code is 503 (service unavailable).</p>
+<p>The requests are failing because the circuit breaker is tripped.  <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#config-access-log-format-response-flags" target="_blank">Response flags</a> are set to <code>UO</code> (Upstream Overflow) and the status code is 503 (service unavailable).</p>
 <p><img alt="Zipkin 503s" src="../zipkin-503.png" /></p>
 <h2 id="prometheus-metrics">Prometheus metrics<a class="headerlink" href="#prometheus-metrics" title="Permanent link">&para;</a></h2>
 <p>Another option is looking at the Prometheus metrics directly.</p>
@@ -987,7 +987,7 @@ You can identify failing traces by looking at the number of spans - the failing 
 <p>Save the above YAML to <code>web-frontend-failing.yaml</code> and apply it to the cluster:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl apply -f web-frontend-failing.yaml
 </code></pre></div>
-<p>If we run Fortio we'll see that majority of the requests will be failing. That's because the <code>web-frontend-failing</code> deployment has more replicas than the "good" deployment.</p>
+<p>If we run Fortio we'll see that majority (roughly, 80%) of the requests will be failing. That's because the <code>web-frontend-failing</code> deployment has more replicas than the "good" deployment.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl <span class="nb">exec</span> deploy/fortio-deploy -c fortio -- <span class="se">\</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning web-frontend
 </code></pre></div>
@@ -1029,14 +1029,14 @@ You can identify failing traces by looking at the number of spans - the failing 
 <p>Save the YAML to <code>outlier-web-frontend.yaml</code> and apply it:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>kubectl apply -f outlier-web-frontend.yaml
 </code></pre></div>
-<p>If we repeat the test, we might get a similar distribution of responses the first time, however, if we repeat the command again (once the outliers were kicked out), we'll get a much better distribution:</p>
+<p>If we repeat the test, we might get a similar distribution of responses the first time.  However, if we repeat the command (once the outliers were ejected), we'll get a much better distribution:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>kubectl <span class="nb">exec</span> deploy/fortio-deploy -c fortio -- <span class="se">\</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>  /usr/bin/fortio load -c <span class="m">2</span> -qps <span class="m">0</span> -n <span class="m">50</span> -loglevel Warning web-frontend
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="go">...</span>
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="go">Code 200 : 50 (100.0 %)</span>
 </code></pre></div>
-<p>The reason for more HTTP 200 responses is because as soon as the failing hosts were ejected (failing Pods from the <code>web-frontend-failing</code> deployment), the requests were sent to the other host that doesn't fail. If we'd wait for a while (the 60s <code>baseEjectionTime</code>), the failing hosts would be brought back into the load balancing pool and we'd get a similar distribution of responses as before (majority of them failing).</p>
+<p>The reason for more HTTP 200 responses is because as soon as the failing hosts were ejected (failing Pods from the <code>web-frontend-failing</code> deployment), the requests were sent to the other host that doesn't fail. If we waited until after the 60 second <code>baseEjectionTime</code> expired, the failing hosts would be brought back into the load balancing pool and we'd get a similar distribution of responses as before (majority of them failing).</p>
 <p>We can also look at the metrics from the outlier detection in the same way we did for the circuit breakers:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>kubectl <span class="nb">exec</span> deploy/fortio-deploy -c istio-proxy -- <span class="se">\</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  pilot-agent request GET stats <span class="p">|</span> grep web-frontend <span class="p">|</span> grep ejections_total
@@ -1046,16 +1046,13 @@ You can identify failing traces by looking at the number of spans - the failing 
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Other metrics that we can look at are <code>ejections_consecutive_5xx</code>, <code>ejections_enforced_total</code> or any other metric with <code>outlier_detection</code> in its name. You can find the full list of metric names and there descriptions in the <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection">Envoy documentation</a>.</p>
+<p>Other metrics that we can look at are <code>ejections_consecutive_5xx</code>, <code>ejections_enforced_total</code> or any other metric with <code>outlier_detection</code> in its name. The full list of metric names and their descriptions can be found in the <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/upstream/cluster_manager/cluster_stats#config-cluster-manager-cluster-stats-outlier-detection" target="_blank">Envoy documentation</a>.</p>
 </div>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
-<p>To clean up all resources, run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>kubectl delete -f web-frontend-failing.yaml
-<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>kubectl delete -f cb-lab.yaml
+<p>To clean up resources created in this lab, run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>kubectl delete destinationrule web-frontend
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>kubectl delete -f web-frontend-failing.yaml
 <a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>kubectl delete -f fortio.yaml
-<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>kubectl delete dr --all
-<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>kubectl delete vs --all
-<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>kubectl delete gateway --all
 </code></pre></div>
 
 
